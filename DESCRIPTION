@@ -1,0 +1,15 @@
+Package: wkFocus
+Title: Data and tools for analyzing "research phase" work focus
+Version: 0.0.0.9000
+Authors@R: person("Michael", "Garrett", email = "zmdg11@etsu.edu", role = c("aut", "cre"))
+Description: Provides data, scripts, and vignettes used to analyze the work focus of groups in the "research phase" of the dissertation study, _Seeing the world differently_.
+Depends: R (>= 3.3.2)
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Imports: dplyr,
+    readxl,
+    ggplot2,
+    lubridate,
+    stringr
