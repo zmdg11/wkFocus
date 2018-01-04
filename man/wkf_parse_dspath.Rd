@@ -16,16 +16,16 @@ A list with the full dataset name (`name`), the session ID (`sid`), the code typ
 Extracts the file name in `path`, excluding any extention, and parses it for component identifiers of a work-focus coding dataset. The identifiers are located soley by their position in the file name.
 }
 \examples{
-path <- "~/data/res2C-focus-hand-mdg-20180101-cstamp.Rda"
+path <- "~/data/res2C_focus_hand_mdg_20180101_cstamp.Rda"
 wkf_parse_dspath(path)
 # Does not need directory specifier
-path <- "res1A-focus-video.xlsx"
+path <- "res1A_focus_video.xlsx"
 wkf_parse_dspath(path)
 # Works for bare dsname wo/extension
-path <- "res1A-focus-hand-slg-20180101-tsample"
+path <- "res1A_focus_hand_slg_20180101_tsample"
 wkf_parse_dspath(path)
 \dontrun{
 # Can't have missinng ds IDs in the middle
-path <- "video-focus-video--20180101.edl"
+path <- "video_focus_video__20180101.edl"
 wkf_parse_dspath(path)}
 }

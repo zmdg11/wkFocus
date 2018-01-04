@@ -14,4 +14,4 @@
 #'   \item{Coder}{The coder ID for this code. A 3-letter character string}
 #' }
 #' @source _Seeing the world differently_ study. Contact the author.
-"res1A-focus-hand-cstamp"
+"res1A_focus_hand_cstamp"

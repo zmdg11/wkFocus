@@ -4,7 +4,7 @@
 \alias{wkf_build_dsdesc}
 \title{wkf_build_dsdesc}
 \usage{
-wkf_build_dsdesc(dslist, change)
+wkf_build_dsdesc(dslist, change = NULL)
 }
 \arguments{
 \item{dslist}{A dataset descriptor list with either the name element or a set of initial dataset identifiers present.}
@@ -29,16 +29,16 @@ dsid$name <- ""
 wkf_build_dsdesc(dsid, change = NULL)
 #
 # Build descriptor by swapping parts of a ds name
-dsid$name <- "res1A-focus-hand-slg-20180101-tsample"
+dsid$name <- "res1A_focus_hand_slg_20180101_tsample"
 dsid[2:7] <- ""
 wkf_build_dsdesc(dsid, list(version = "20171228"))
 \dontrun{
 # Poor specification - embedded identifier is missing
-dsid$name <- "res2C-focus-hand"
+dsid$name <- "res2C_focus_hand"
 dsid[2:7] <- ""
 wkf_build_dsdesc(dsid, list(version = "20171228"))}
 # Correct
-dsid$name <- "res2C-focus-hand"
+dsid$name <- "res2C_focus_hand"
 dsid[2:7] <- ""
 wkf_build_dsdesc(dsid, list(coder = "slg", version = "20171228", stamp = ""))
 }

@@ -23,21 +23,21 @@
 #' wkf_build_dsdesc(dsid, change = NULL)
 #' #
 #' # Build descriptor by swapping parts of a ds name
-#' dsid$name <- "res1A-focus-hand-slg-20180101-tsample"
+#' dsid$name <- "res1A_focus_hand_slg_20180101_tsample"
 #' dsid[2:7] <- ""
 #' wkf_build_dsdesc(dsid, list(version = "20171228"))
 #' \dontrun{
 #' # Poor specification - embedded identifier is missing
-#' dsid$name <- "res2C-focus-hand"
+#' dsid$name <- "res2C_focus_hand"
 #' dsid[2:7] <- ""
 #' wkf_build_dsdesc(dsid, list(version = "20171228"))}
 #' # Correct
-#' dsid$name <- "res2C-focus-hand"
+#' dsid$name <- "res2C_focus_hand"
 #' dsid[2:7] <- ""
 #' wkf_build_dsdesc(dsid, list(coder = "slg", version = "20171228", stamp = ""))
 
 
-wkf_build_dsdesc <- function(dslist, change) {
+wkf_build_dsdesc <- function(dslist, change = NULL) {
 
   # We need a set of specifiers to beging with
   if (dslist$name != "") {
@@ -48,9 +48,9 @@ wkf_build_dsdesc <- function(dslist, change) {
   # Need to replace specifiers according to `change`.
   tmp <- replace(tmp, names(change), change)
 
-  # To avoid trailing dashes if trailing identifiers are ""
+  # To avoid trailing underscores if trailing identifiers are ""
   inx <- max(which(tmp != ""))
-  tmp[1] <- paste(tmp[2:inx], collapse = "-")
+  tmp[1] <- paste(tmp[2:inx], collapse = "_")
 
   # Return as is. No checking to see if a good dsname list is formed
   return(tmp)
@@ -129,17 +129,17 @@ wkf_convert_tcode <- function (tcode, fr, origin) {
 #' @export
 #'
 #' @examples
-#' path <- "~/data/res2C-focus-hand-mdg-20180101-cstamp.Rda"
+#' path <- "~/data/res2C_focus_hand_mdg_20180101_cstamp.Rda"
 #' wkf_parse_dspath(path)
 #' # Does not need directory specifier
-#' path <- "res1A-focus-video.xlsx"
+#' path <- "res1A_focus_video.xlsx"
 #' wkf_parse_dspath(path)
 #' # Works for bare dsname wo/extension
-#' path <- "res1A-focus-hand-slg-20180101-tsample"
+#' path <- "res1A_focus_hand_slg_20180101_tsample"
 #' wkf_parse_dspath(path)
 #' \dontrun{
 #' # Can't have missinng ds IDs in the middle
-#' path <- "video-focus-video--20180101.edl"
+#' path <- "video_focus_video__20180101.edl"
 #' wkf_parse_dspath(path)}
 
 wkf_parse_dspath <- function(path) {
@@ -151,7 +151,7 @@ wkf_parse_dspath <- function(path) {
   #  Get name wo/ directory or extension (help from stackoverflow)
   fn  <- sub("([^.]+)(\\.[[:alnum:]]+$)", "\\1", basename(path))
   #  Need component identifiers
-  tmp <- stringr::str_split_fixed(fn, "-", n = 6)
+  tmp <- stringr::str_split_fixed(fn, "_", n = 6)
   tmp <- list(name = fn,
               sid = tmp[1],
               type = tmp[2],

@@ -87,11 +87,11 @@ pars <- wkFocus::wkf_config()  # project-wide parameters
 
 ## Read and clean hand-coded data ----------------------
 
-cat("Converting", "'focus' codesets in: data-raw folder ...")
+print(paste("Converting", "'focus' codesets in: data-raw folder ..."))
 
 # -------------------------
-codeset <- "res1A-focus-hand.xlsx"
+codeset <- "res1A_focus_hand.xlsx"
 print(paste("...", codeset))
 ds_raw_dat <- gather_raw_data(codeset)
-`res1A-focus-hand-cstamp` <- lapply(ds_raw_dat, create_res_cstamp_dat)
-devtools::use_data(`res1A-focus-hand-cstamp`, overwrite = TRUE)
+res1A_focus_hand_cstamp <- lapply(ds_raw_dat, create_res_cstamp_dat)
+devtools::use_data(res1A_focus_hand_cstamp, overwrite = TRUE)
