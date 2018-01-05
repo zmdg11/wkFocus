@@ -15,18 +15,18 @@ library(readxl)       # read excel files
 
 gather_raw_data <- function(fname) {
 
-  ## Returns a list of raw datasets from an excel file (fname) in the data-raw folder
+  ## Returns a list of raw datasets from an excel file (file) in the data-raw folder
   #
   #  Database identifiers are attahced to each dataset as a data frame attribute
 
-  raw_file <- file.path("./data-raw", fname)
+  raw_path <- file.path("./data-raw", fname)
 
   # Move all sheets in the raw file into a list of raw data frames
-  ds_sheets <- readxl::excel_sheets(raw_file)
-  ds_raw_dat <- lapply(ds_sheets, read_excel, path = raw_file)
+  ds_sheets <- readxl::excel_sheets(raw_path)
+  ds_raw_dat <- lapply(ds_sheets, read_excel, path = raw_path)
 
   # Create dataset descriptors for all data frames using file name and sheet names
-  ds_names <- paste(tools::file_path_sans_ext(raw_file), ds_sheets, sep = "-")
+  ds_names <- paste(tools::file_path_sans_ext(fname), ds_sheets, sep = "_")
   ds_desc <- lapply(ds_names, wkf_parse_dspath)
 
   # Turn each descriptor into an attribute of the data frame
@@ -95,3 +95,11 @@ print(paste("...", codeset))
 ds_raw_dat <- gather_raw_data(codeset)
 res1A_focus_hand_cstamp <- lapply(ds_raw_dat, create_res_cstamp_dat)
 devtools::use_data(res1A_focus_hand_cstamp, overwrite = TRUE)
+
+
+# -------------------------
+codeset <- "res1C_focus_hand.xlsx"
+print(paste("...", codeset))
+ds_raw_dat <- gather_raw_data(codeset)
+res1C_focus_hand_cstamp <- lapply(ds_raw_dat, create_res_cstamp_dat)
+devtools::use_data(res1C_focus_hand_cstamp, overwrite = TRUE)
