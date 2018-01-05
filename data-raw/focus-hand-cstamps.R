@@ -19,7 +19,7 @@ gather_raw_data <- function(fname) {
   #
   #  Database identifiers are attahced to each dataset as a data frame attribute
 
-  raw_path <- file.path("./data-raw", fname)
+  raw_path <- file.path(".", "data-raw", fname)
 
   # Move all sheets in the raw file into a list of raw data frames
   ds_sheets <- readxl::excel_sheets(raw_path)

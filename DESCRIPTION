@@ -13,3 +13,7 @@ Imports: dplyr,
     ggplot2,
     lubridate,
     stringr
+Suggests: knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
