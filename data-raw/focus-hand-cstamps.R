@@ -3,45 +3,44 @@
 # Create the focus coding dataset files from the raw Excel files for the res
 # phase of the study
 #
-# Modified: 20180104
+# Modified: 20180109
 
 ## Load packages -------------------------
 
-library(devtools)     # ::use_data
+library(devtools)     # use_data
 library(dplyr)        # manipulate dataframes
 library(readxl)       # read excel files
+library(purrr)        # map
 
 ## Functions  ----------------------
 
-gather_raw_data <- function(fname) {
+get_raw_codeset <- function(fname) {
 
-  ## Returns a list of raw datasets from an excel file (file) in the data-raw folder
-  #
-  #  Database identifiers are attahced to each dataset as a data frame attribute
+  ## Returns a list of raw wkFocus datasets (name, data pairs) from the raw data
+  #  in "file".
 
   raw_path <- file.path(".", "data-raw", fname)
+  cs_desc <- wkFocus::wkf_parse_dspath(fname)
 
   # Move all sheets in the raw file into a list of raw data frames
-  ds_sheets <- readxl::excel_sheets(raw_path)
-  ds_raw_dat <- lapply(ds_sheets, read_excel, path = raw_path)
+  cs_sheets <- readxl::excel_sheets(raw_path)
+  cs_raw_dat <- cs_sheets %>%
+    purrr::map(~ read_excel(path = raw_path, sheet = .))
 
-  # Create dataset descriptors for all data frames using file name and sheet names
-  ds_names <- paste(tools::file_path_sans_ext(fname), ds_sheets, sep = "_")
-  ds_desc <- lapply(ds_names, wkf_parse_dspath)
+  # Datasets need standard wkFocus names
 
-  # Turn each descriptor into an attribute of the data frame
-  for (i in seq_along(ds_raw_dat)) {
-    attr(ds_raw_dat[[i]], "desc") <- ds_desc[[i]]
-  }
+  cs_names <- as.list(paste(cs_desc$name, cs_sheets, "raw", sep = "_"))
 
-  return(ds_raw_dat)
+  return(purrr::transpose(list(name = cs_names, data = cs_raw_dat)))
 }
 
-create_res_cstamp_dat <- function(df) {
+create_res_cstamps <- function(dataset) {
 
-  ## Returns a single codestamp dataset from a single raw dataset.
+  ## Returns a single cstamp dataset (name, data pair) from a single raw dataset
 
-  desc <- attr(df, "desc")
+  desc <- wkFocus::wkf_parse_dspath(dataset$name)
+  df <- dataset$data
+
   Type  <- desc$type
 
   # Code from here is specific to research phase data. These session comprises
@@ -74,32 +73,20 @@ create_res_cstamp_dat <- function(df) {
       GID   = factor(GID, levels = pars$GID_levels, ordered = TRUE),
       Type  = factor(Type, levels = pars$code_types, ordered = TRUE))
 
-  # Set dataset descriptor to indicate a codestamp dataset
   desc <- wkFocus::wkf_build_dsdesc(desc, list(stamp = "cstamp"))
-  attr(df, "desc") <- desc
-
-  return(df)
+  return(list(name = desc$name, data = df))
 }
-
-## Parameters ----------------------
-
-pars <- wkFocus::wkf_config()  # project-wide parameters
 
 ## Read and clean hand-coded data ----------------------
 
-print(paste("Converting", "'focus' codesets in: data-raw folder ..."))
-
 # -------------------------
-codeset <- "res1A_focus_hand.xlsx"
-print(paste("...", codeset))
-ds_raw_dat <- gather_raw_data(codeset)
-res1A_focus_hand_cstamp <- lapply(ds_raw_dat, create_res_cstamp_dat)
+res1A_focus_hand_cstamp <- "res1A_focus_hand.xlsx" %>%
+  get_raw_codeset() %>%
+  map(~ create_res_cstamps(.))
 devtools::use_data(res1A_focus_hand_cstamp, overwrite = TRUE)
 
-
 # -------------------------
-codeset <- "res1C_focus_hand.xlsx"
-print(paste("...", codeset))
-ds_raw_dat <- gather_raw_data(codeset)
-res1C_focus_hand_cstamp <- lapply(ds_raw_dat, create_res_cstamp_dat)
+res1C_focus_hand_cstamp <- "res1C_focus_hand.xlsx" %>%
+  get_raw_codeset() %>%
+  map(~ create_res_cstamps(.))
 devtools::use_data(res1C_focus_hand_cstamp, overwrite = TRUE)
