@@ -4,11 +4,11 @@
 \alias{wkf_tsample_cstamps}
 \title{wkf_tsample_cstamps}
 \usage{
-wkf_tsample_cstamps(cstamps, dt = 1, bt = NULL, et = NULL,
-  verbose = FALSE)
+wkf_tsample_cstamps(ds, dt = 1, bt = NULL, et = NULL, verbose = FALSE,
+  warn = TRUE)
 }
 \arguments{
-\item{cstamps}{Data frame holding a single dataset of codestamps.}
+\item{ds}{A list with ds$name = dataset name and ds$data = a data frame of codestamps.}
 
 \item{dt}{Sampling timestep. Defaults to 1 second.}
 
