@@ -107,7 +107,8 @@ wkf_convert_tcode <- function (tcode, fr, origin) {
   # Focus coding will be rounded to the nearest second
   t_secs <- round(t_secs)
 
-  # Render timecodes as instants (datetimes) for plotting
+  # Timestamps is class POSIXct, type "double"
+  # t_secs from orign, typically set in pars
   t_inst <- as.POSIXct(origin, tz = "UTC") + t_secs
 
   # Create data frame of timecodes, times, frames, and instants

@@ -166,7 +166,7 @@ wkf_tsample_cstamps <- function(ds, dt = 1, bt = NULL, et = NULL,
 
   ## Set up blank time sample data frame
   tsample_df <- dplyr::data_frame(
-    t = .POSIXct(character()),  # a way to make a null POSIXct var
+    t = .POSIXct(double(), tz = "UTC"),  # create a null time var
     focus1 = factor(levels = pars$focus_codes, ordered = TRUE),
     focus2 = factor(levels = pars$focus_codes, ordered = TRUE))
 
