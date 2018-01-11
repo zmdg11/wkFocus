@@ -4,7 +4,7 @@
 \alias{wkf_build_dsdesc}
 \title{wkf_build_dsdesc}
 \usage{
-wkf_build_dsdesc(dslist, change = NULL)
+wkf_build_dsdesc(dslist = NULL, change = NULL)
 }
 \arguments{
 \item{dslist}{A dataset descriptor list with either the name element or a set of initial dataset identifiers present.}
@@ -41,4 +41,6 @@ wkf_build_dsdesc(dsid, list(version = "20171228"))}
 dsid$name <- "res2C_focus_hand"
 dsid[2:7] <- ""
 wkf_build_dsdesc(dsid, list(coder = "slg", version = "20171228", stamp = ""))
+# Build a blank descriptor
+wkf_build_dsdesc()
 }

@@ -35,25 +35,39 @@
 #' dsid$name <- "res2C_focus_hand"
 #' dsid[2:7] <- ""
 #' wkf_build_dsdesc(dsid, list(coder = "slg", version = "20171228", stamp = ""))
+#' # Build a blank descriptor
+#' wkf_build_dsdesc()
 
+wkf_build_dsdesc <- function(dslist = NULL, change = NULL) {
 
-wkf_build_dsdesc <- function(dslist, change = NULL) {
-
-  # We need a set of specifiers to beging with
-  if (dslist$name != "") {
-    tmp <- wkf_parse_dspath(dslist$name)
-  } else {
-    tmp <- dslist
+  if (is.null(dslist)) {
+    # create a list of empty IDs
+    dslist <- wkf_parse_dspath()
+  } else if (dslist[1] != "") {
+    # If there is a ds name, overwrite current IDs
+    dslist <- wkf_parse_dspath(dslist$name)
   }
-  # Need to replace specifiers according to `change`.
-  tmp <- replace(tmp, names(change), change)
 
-  # To avoid trailing underscores if trailing identifiers are ""
-  inx <- max(which(tmp != ""))
-  tmp[1] <- paste(tmp[2:inx], collapse = "_")
+  # Replace identifiers according to list in `change`.
+  dslist <- replace(dslist, names(change), change)
 
-  # Return as is. No checking to see if a good dsname list is formed
-  return(tmp)
+  # If any identifiers are specified, try to overwrite the name. However,
+  # test for ill-formed dsnames: wkFocus tools require all leading IDs to be
+  # significant. Trailing IDs can be missing, but not ones in the middle.
+
+  if (any(dslist[-1] != "")) {       # If there's and ID, try to use it
+
+    inx <- max(which(dslist != ""))  # find place of last ID in the list
+
+    if (any(dslist[2:inx] == "")) {  # any blank IDs before that are in error
+      stop(paste0("Nontrailing ID is missing in '", path, "'"))
+    } else {
+    dslist[1] <- paste(dslist[2:inx], collapse = "_")
+    }
+
+  } else  dslist[1] <- ""            # all IDs are empty
+
+  return(dslist)
 }
 
 #-----------------------------------------------------
@@ -124,9 +138,10 @@ wkf_convert_tcode <- function (tcode, fr, origin) {
 #'
 #' Extracts the file name in `path`, excluding any extention, and parses it for component identifiers of a work-focus coding dataset. The identifiers are located soley by their position in the file name.
 #'
-#' @param path Path to a file holding a work focus dataset, or the name of a dataset. The dataset name should be of the form sid-type-method-coder-version-stamp. However, training identifiers can be missing.
+#' @param path Path to a file holding a work focus dataset, or the name of a dataset. The dataset name should be of the form sid-type-method-coder-version-stamp. Trailing identifiers can be missing.
 #'
-#' @return A list with the full dataset name (`name`), the session ID (`sid`), the code type (`type`),the method (`method`), the coder (`coder`), the version (`version`), and the type of stamp (`stamp`). Missing trailing identifiers will return as "".
+#' @return A list with the full dataset name (`name`), the session ID (`sid`), the code type (`type`),the method (`method`), the coder (`coder`), the version (`version`), and the type of stamp (`stamp`). Missing trailing identifiers will return as "". An empty file path returns a descriptor with empty identifiers.
+#'
 #' @export
 #'
 #' @examples
@@ -143,16 +158,16 @@ wkf_convert_tcode <- function (tcode, fr, origin) {
 #' path <- "video_focus_video__20180101.edl"
 #' wkf_parse_dspath(path)}
 
-wkf_parse_dspath <- function(path) {
+wkf_parse_dspath <- function(path = "") {
 
-  if(path == "")
-    stop("Empty path")
+  fn <- tools::file_path_sans_ext(basename(path))
 
-  ## Parse path
-  #  Get name wo/ directory or extension (help from stackoverflow)
-  fn  <- sub("([^.]+)(\\.[[:alnum:]]+$)", "\\1", basename(path))
-  #  Need component identifiers
+  # Assumes file name is in proper format to split up into component identifiers
+  # NB. Empty string parses into empty identifiers, which will return well-formed
+  # but empty desciptor list.
+
   tmp <- stringr::str_split_fixed(fn, "_", n = 6)
+
   tmp <- list(name = fn,
               sid = tmp[1],
               type = tmp[2],
@@ -161,10 +176,15 @@ wkf_parse_dspath <- function(path) {
               version = tmp[5],
               stamp = tmp[6])
 
-  # DS name can't have a gap in the middle. Only trainling IDs can be missing
-  inx <- max(which(tmp != ""))
-  if (any(tmp[1:inx] == ""))
-    stop(paste0("Nontrailing ID is missing in '", path, "'"))
+  # Test for ill-formed dsnames: wkFocus tools require all leading IDs to be
+  # significant. Trailing IDs can be missing, but not ones in the middle.
+  # However, an empty fn produces empty IDs, which is OK.
+
+  if (fn != "") {
+    inx <- max(which(tmp != ""))
+    if (any(tmp[1:inx] == ""))
+      stop(paste0("Nontrailing ID is missing in '", path, "'"))
+  }
 
   return(tmp)
 }

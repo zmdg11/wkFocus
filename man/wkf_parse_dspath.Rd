@@ -4,13 +4,13 @@
 \alias{wkf_parse_dspath}
 \title{wkf_parse_dspath}
 \usage{
-wkf_parse_dspath(path)
+wkf_parse_dspath(path = "")
 }
 \arguments{
-\item{path}{Path to a file holding a work focus dataset, or the name of a dataset. The dataset name should be of the form sid-type-method-coder-version-stamp. However, training identifiers can be missing.}
+\item{path}{Path to a file holding a work focus dataset, or the name of a dataset. The dataset name should be of the form sid-type-method-coder-version-stamp. Trailing identifiers can be missing.}
 }
 \value{
-A list with the full dataset name (`name`), the session ID (`sid`), the code type (`type`),the method (`method`), the coder (`coder`), the version (`version`), and the type of stamp (`stamp`). Missing trailing identifiers will return as "".
+A list with the full dataset name (`name`), the session ID (`sid`), the code type (`type`),the method (`method`), the coder (`coder`), the version (`version`), and the type of stamp (`stamp`). Missing trailing identifiers will return as "". An empty file path returns a descriptor with empty identifiers.
 }
 \description{
 Extracts the file name in `path`, excluding any extention, and parses it for component identifiers of a work-focus coding dataset. The identifiers are located soley by their position in the file name.
