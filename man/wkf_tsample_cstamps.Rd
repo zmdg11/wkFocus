@@ -17,6 +17,8 @@ wkf_tsample_cstamps(ds, dt = 1, bt = NULL, et = NULL, verbose = FALSE,
 \item{et}{POSIXct object given the time to end sampling. If NULL, sampling will end at the latest time in the dataset.}
 
 \item{verbose}{If TRUE, codes will be printed at each timestep and a summary of missing codes will be given.}
+
+\item{warn}{Logical. If true (default), warnings will be issued when an NA code}
 }
 \value{
 A data frame of time-samples with the "desc" attribute set to the descriptor of the dataset sampled.

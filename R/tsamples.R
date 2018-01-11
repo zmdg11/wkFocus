@@ -142,6 +142,7 @@ wkf_compAB_tsample <- function(tsAB) {
 #' @param bt POSIXct object giving the time to begin sampling. If NULL, sampling will begin at the earliest time in the dataset.
 #' @param et POSIXct object given the time to end sampling. If NULL, sampling will end at the latest time in the dataset.
 #' @param verbose If TRUE, codes will be printed at each timestep and a summary of missing codes will be given.
+#' @param warn Logical. If true (default), warnings will be issued when an NA code
 #'
 #' @return A data frame of time-samples with the "desc" attribute set to the descriptor of the dataset sampled.
 #' @export
@@ -177,7 +178,7 @@ wkf_tsample_cstamps <- function(ds, dt = 1, bt = NULL, et = NULL,
     # Get all codestamps that contain this sample time. If the workfocus was
     # split at time t, there will be more two codestamps in `smple`
 
-    smple <- filter(cstamps, In <= t, t <= Out)
+    smple <- dplyr::filter(cstamps, In <= t, t <= Out)
     if (verbose) {                       #  for tracking
       print(paste(t, smple$Code))
     }
