@@ -11,6 +11,7 @@ library(devtools)     # use_data
 library(dplyr)        # manipulate dataframes
 library(readxl)       # read excel files
 library(purrr)        # map
+library(wkFocus)
 
 ## Functions  ----------------------
 
@@ -90,3 +91,16 @@ res1C_focus_hand_cstamp <- "res1C_focus_hand.xlsx" %>%
   get_raw_codeset() %>%
   map(~ create_res_cstamps(.))
 devtools::use_data(res1C_focus_hand_cstamp, overwrite = TRUE)
+
+# -------------------------
+res1B_focus_hand_cstamp <- "res1B_focus_hand.xlsx" %>%
+  get_raw_codeset() %>%
+  map(~ create_res_cstamps(.))
+devtools::use_data(res1B_focus_hand_cstamp, overwrite = TRUE)
+
+# -------------------------
+res2A_focus_hand_cstamp <- "res2A_focus_hand.xlsx" %>%
+  get_raw_codeset() %>%
+  map(~ create_res_cstamps(.))
+devtools::use_data(res2A_focus_hand_cstamp, overwrite = TRUE)
+
