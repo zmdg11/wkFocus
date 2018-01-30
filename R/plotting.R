@@ -37,9 +37,9 @@ pl_blank_session <- function(pl_labs = NULL) {
 
 # --------------------------------------------------
 
-#' pl_compAB
+#' wkf_pl_compAB
 #'
-#' This function creates a standard session plot object, markes out the intervals of coder disagreements using top-to-bottom grey bars, and optinally overlays a set of codestamps.
+#' Plots a dataframe of comparisons between two coders (A, B) and optinally overlays a set of focus codes.
 #'
 #' @param agr_df Dataframe of timestamped comparisons between two coders
 #' @param which Determines whether to plot agreements ("A"), or disagreements ("D")
@@ -51,7 +51,7 @@ pl_blank_session <- function(pl_labs = NULL) {
 #'
 #' @examples
 
-pl_compAB <- function(agr_df, which = "D", cst_df = NULL, pl_labs = NULL) {
+wkf_pl_compAB <- function(agr_df, which = "D", cst_df = NULL, pl_labs = NULL) {
 
   df <- dplyr::filter(agr_df, d == which)
 
@@ -74,7 +74,7 @@ pl_compAB <- function(agr_df, which = "D", cst_df = NULL, pl_labs = NULL) {
 
 # --------------------------------------------------
 
-#' pl_focus_codes
+#' wkf_pl_focus
 #'
 #' Will graph segments for all codes in the database. Uses a generic title. Add subtitle, y-axis label, etc. through `pl_labs` if wanted.
 #'
@@ -86,7 +86,7 @@ pl_compAB <- function(agr_df, which = "D", cst_df = NULL, pl_labs = NULL) {
 #'
 #' @examples
 
-pl_focus_codes <- function(cst_df, pl_labs = NULL) {
+wkf_pl_focus <- function(cst_df, pl_labs = NULL) {
 
   ## Parameters -------------
 
