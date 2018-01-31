@@ -14,4 +14,4 @@
 #'   \item{Code}{The code for the codestamp: "Rd", "Do", "Rp", "Ds", "O", or "Of"}
 #' }
 #' @source _Seeing the world differently_ study. Contact the author.
-"res1A_focus_hand_cstamp"
+"res1A_focus"

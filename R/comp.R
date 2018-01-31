@@ -1,46 +1,45 @@
 # --------------------------------------------------
 
-#' wkf_compAB_tsample
+#' comp_ab_at_time
 #'
 #' Compares coding decisions made by two coders (A, B) at a given time.
 #'
 #' @param tsAB A list containing timesamples for two coders, A and B.
 #'
 #' @return A list giving the time and the two agreement decisions at that time.
-#' @export
 #'
 #' @examples
 #' # One agreement
 #' tsAB1 <- list(A.t = t1, A.focus1 = "Rd", A.focus2 = NA_character_,
 #'               B.t = t1, B.focus1 = "Rd", B.focus2 = NA_character_)
-#' wkf_compAB_tsample(tsAB1)
+#' comp_ab_at_time(tsAB1)
 #' # Two agreements - order doesn't matter
 #' tsAB2 <- list(A.t = t1, A.focus1 = "Rd", A.focus2 = "Do",
 #'               B.t = t1, B.focus1 = "Do", B.focus2 = "Rd")
-#' wkf_compAB_tsample(tsAB2)
+#' comp_ab_at_time(tsAB2)
 #' # One agreement, one disagreement
 #' tsAB3 <- list(A.t = t1, A.focus1 = "Rd", A.focus2 = "Do",
 #'               B.t = t1, B.focus1 = "Rd", B.focus2 = NA_character_)
-#' wkf_compAB_tsample(tsAB3)
+#' comp_ab_at_time(tsAB3)
 #' # One agreement, one disagreement
 #' list(A.t = t1, A.focus1 = "Rd", A.focus2 = "Do",
 #'      B.t = t1, B.focus1 = "Ds", B.focus2 = "Rd") %>%
-#'   wkf_compAB_tsample()
+#'   comp_ab_at_time()
 #' # Two disagreements
 #' list(A.t = t1, A.focus1 = "Rd", A.focus2 = "Do",
 #'      B.t = t1, B.focus1 = "Rp", B.focus2 = "Ds") %>%
-#'   wkf_compAB_tsample()
+#'   comp_ab_at_time()
 #' \dontrun{
 #' # Coder B has duplicte code - error
 #' tsAB_err <- list(A.t = t1, A.focus1 = "Rd", A.focus2 = NA_character_,
 #'                  B.t = t1, B.focus1 = "Rd", B.focus2 = "Rd")
-#' wkf_compAB_tsample(tsAB_err)}
+#' comp_ab_at_time(tsAB_err)}
 #' # Can use `map()` to produce a data frame of decisions
 #' tsAB1_3 <- as.data.frame(rbind(tsAB1, tsAB2, tsAB3))
 #' tsAB1_3 %>% purrr::transpose() %>%
-#'   purrr::map_df(wkf_compAB_tsample)
+#'   purrr::map_df(comp_ab_at_time)
 
-wkf_compAB_tsample <- function(tsAB) {
+comp_ab_at_time <- function(tsAB) {
 
   ## Internal functions tmp <- tibble(f1 = map(dsdat, "focus1"), f2 = map(dsdat, "focus2"))
 
@@ -130,4 +129,14 @@ wkf_compAB_tsample <- function(tsAB) {
 
   ## Return a 1-row data frame of agreement comparisons.
   return(data_frame(d1 = m[1], d2 = m[2]))
+}
+
+#' wkf_comp
+#'
+#' @return
+#' @export
+#'
+#' @examples
+wkf_comp <- function() {
+
 }

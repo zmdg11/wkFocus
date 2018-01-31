@@ -1,29 +1,32 @@
 # --------------------------------------------------
 
-#' wkf_tsample_cstamps
+#' wkf_tsample
 #'
 #' Samples a single cstamp dataset between two time stamps using a specified time step.
 #'
-#' @param ds A list with ds$name = dataset name and ds$data = a data frame of codestamps.
+#' @param ds_cst A codestamp dataset ($type = "cstamp").
 #' @param dt Sampling timestep. Defaults to 1 second.
 #' @param bt POSIXct object giving the time to begin sampling. If NULL, sampling will begin at the earliest time in the dataset.
 #' @param et POSIXct object given the time to end sampling. If NULL, sampling will end at the latest time in the dataset.
 #' @param verbose If TRUE, codes will be printed at each timestep and a summary of missing codes will be given.
 #' @param warn Logical. If true (default), warnings will be issued when an NA code
 #'
-#' @return A dataset of type "tsample".
+#' @return A time-sample dataset ($type = "tsample").
 #' @export
 #'
 #' @examples
 #' smpl_codestamps <- res1A_focus_hand_cstamp[[1]]
-#' time_samples <- wkf_tsample_cstamps(smpl_codestamps)
+#' time_samples <- wkf_tsample(smpl_codestamps)
 #' str(time_samples)
 
-wkf_tsample_cstamps <- function(ds, dt = 1, bt = NULL, et = NULL,
+wkf_tsample <- function(ds_cst, dt = 1, bt = NULL, et = NULL,
                                 verbose = FALSE, warn = TRUE) {
 
-  ds_name <- ds$name
-  cstamps <- ds$data
+  if (ds_cst$type != "cstamp")
+    stop ("Data set type (", ds_cst$type, ") is not for time sampling.")
+
+  ds_name <- ds_cst$name$A
+  cstamps <- ds_cst$data
 
   ## Setup time params
 
@@ -62,8 +65,10 @@ wkf_tsample_cstamps <- function(ds, dt = 1, bt = NULL, et = NULL,
     i <- i + 1
   }
 
-  dsdes <- wkf_build_dsdesc(wkf_parse_dspath(ds_name), list(stamp = "tsample"))
-
-  return(list(name = dsdes$name, data = tsample_df))
+  # Dataset has same name but is now a time-sample dataset
+  return(list(
+    type = "tsample",
+    name = list(A = ds_name),
+    data = tsample_df))
 }
 

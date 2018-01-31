@@ -37,7 +37,7 @@ pl_blank_session <- function(pl_labs = NULL) {
 
 # --------------------------------------------------
 
-#' wkf_pl_compAB
+#' wkf_pl_comps
 #'
 #' Plots a dataframe of comparisons between two coders (A, B) and optinally overlays a set of focus codes.
 #'
@@ -51,7 +51,7 @@ pl_blank_session <- function(pl_labs = NULL) {
 #'
 #' @examples
 
-wkf_pl_compAB <- function(agr_df, which = "D", cst_df = NULL, pl_labs = NULL) {
+wkf_pl_comps <- function(agr_df, which = "D", cst_df = NULL, pl_labs = NULL) {
 
   df <- dplyr::filter(agr_df, d == which)
 
@@ -74,7 +74,7 @@ wkf_pl_compAB <- function(agr_df, which = "D", cst_df = NULL, pl_labs = NULL) {
 
 # --------------------------------------------------
 
-#' wkf_pl_focus
+#' wkf_pl_cstamps
 #'
 #' Will graph segments for all codes in the database. Uses a generic title. Add subtitle, y-axis label, etc. through `pl_labs` if wanted.
 #'
@@ -86,7 +86,7 @@ wkf_pl_compAB <- function(agr_df, which = "D", cst_df = NULL, pl_labs = NULL) {
 #'
 #' @examples
 
-wkf_pl_focus <- function(cst_df, pl_labs = NULL) {
+wkf_pl_cstamps <- function(cst_df, pl_labs = NULL) {
 
   ## Parameters -------------
 

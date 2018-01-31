@@ -16,6 +16,9 @@ pars <- list(
   # Relative path to utility scripts: one level below project
   utils = file.path(wd, "utils"),
 
+  # Workflow types for data sets
+  ds_type = c("cstamp", "tsample", "comp"),
+
   ## Conventions for working with time stamps for code-stamps.
   # `t_workshop` is the conventional beginning for turnig timecodes from video
   # to timestamps as POSIXct objects. All times from the beginning of a video
@@ -60,6 +63,7 @@ pars <- list(
 )
 
 # Save config as .json for human viewing.
+message("Writing pars as ", file.path(getwd(), "config.json"))
 write_json(pars, file.path(getwd(), "config.json"), pretty = TRUE)
 
 # .json file will not maintain these vector names, so do them here
