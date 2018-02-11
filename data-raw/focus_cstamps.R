@@ -32,20 +32,25 @@ read_raw_datasets <- function(SID) {
 
   ## Build list of dataset IDs (sid, coder, versrion) from each sheet name
   ds_id <- ds_sheets %>%
+    # sheet name is <chr> "coder_version"
     purrr::map( ~ stringr::str_split_fixed(string = ., "_", 2)) %>%
     purrr::map( ~ list(sid = SID, coder = .[1], version = .[2]))
 
-  ## Read actual data into a list of dfs
+  ## Read codestamp data into a list of dfs
   ds_raw <- ds_sheets %>%
-    purrr::map(~ readxl::read_excel(path = ds_src, sheet = .))  # list df, df...
+    purrr::map(~ readxl::read_excel(path = ds_src, sheet = .))  # list <df, df...
 
   ## Fold all the lists together and flip it so each element
-  #  will be a fully specified raw dataset
+  #  will be a fully specified raw dataset: src, sid, type, data
   return(
-    purrr::transpose( list(
+    purrr::transpose(list(
+      # ... list of same source file
       ds_src = purrr::rep_along(ds_sheets, ds_src),
+      # ... list of SIDs for each sheet
       ds_id = ds_id,
+      # ... list of same type ("raw")
       ds_type = purrr::rep_along(ds_sheets, "raw"),
+      # ... list of raw codestamp datasets
       data = ds_raw )
     )
   )
@@ -98,7 +103,7 @@ make_cstamp_datasets <- function(ds_raw) {
   df <- df %>%
     select(Round, GID, Type, Bin, In, Out, Code)
 
-  # Build the cstamp dataset on top of the raw dataset
+  # Build the cstamp dataset on top of the raw dataset keeping src, SID same
   ds_raw$ds_type <- "cstamp"
   ds_raw$data <- df
 

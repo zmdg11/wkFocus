@@ -2,11 +2,11 @@
 
 export(pl_blank_session)
 export(wkf_build_dsdesc)
-export(wkf_comp)
 export(wkf_config)
 export(wkf_convert_tcode)
 export(wkf_parse_dspath)
 export(wkf_parse_sid)
 export(wkf_pl_comps)
 export(wkf_pl_cstamps)
+export(wkf_stack_cstamps)
 export(wkf_tsample)
