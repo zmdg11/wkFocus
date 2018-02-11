@@ -4,14 +4,14 @@
 \alias{wkf_pl_comps}
 \title{wkf_pl_comps}
 \usage{
-wkf_pl_comps(agr_df, which = "D", cst_df = NULL, pl_labs = NULL)
+wkf_pl_comps(ds_agrAB, to_plot = "D", ds_stack = NULL, pl_labs = NULL)
 }
 \arguments{
-\item{agr_df}{Dataframe of timestamped comparisons between two coders}
+\item{ds_agrAB}{A single dataframe of timestamped comparisons between two coders}
 
-\item{which}{Determines whether to plot agreements ("A"), or disagreements ("D")}
+\item{to_plot}{Determines whether to plot agreements ("A"), or disagreements ("D")}
 
-\item{cst_df}{Optional dataframe of work-focus codestamps.}
+\item{ds_stack}{A single dataframe of stacked codestamps to overlay on the plot.}
 
 \item{pl_labs}{Optional ggplot plotting lables}
 }
@@ -19,5 +19,5 @@ wkf_pl_comps(agr_df, which = "D", cst_df = NULL, pl_labs = NULL)
 A ggplot plotting object showing the comparison between two code datasets.
 }
 \description{
-Plots a dataframe of comparisons between two coders (A, B) and optinally overlays a set of focus codes.
+Plots a set of comparisons between two coders (A, B) and optinally overlays a set of focus codes.
 }

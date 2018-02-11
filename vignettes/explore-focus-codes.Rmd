@@ -254,7 +254,7 @@ These displays highlight codestamps that are out of place or suspiciously long. 
 # Apply these whenever a new base segplot is made
 pl_labels <- list(y = "Focus code", color = "Type", caption = "res2A")
 
-focus_segplot <- wkf_pl_focus(focus_code_df, pl_labs = pl_labels)
+focus_segplot <- wkf_pl_cstamps(focus_code_df, pl_labs = pl_labels)
 
 ```
 

@@ -39,12 +39,3 @@ pander::pander(wkFocus::focus_code_description, justify = c("left", "left", "lef
        split.tables = 100, split.cells = c(2, 13, 70))
 
 
-## ----sample-data---------------------------------------------------------
-ds <- wkFocus::res1A_focus_hand_cstamp[[1]]$data
-ds_name <- wkFocus::res1A_focus_hand_cstamp[[1]]$name
-
-# Display 5 rows for inspection
-knitr::kable(sample_n(ds, 5), 
-  caption = paste("Random sample from dataset", ds_name))
-
-

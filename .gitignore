@@ -2,6 +2,9 @@
 .Rhistory
 .RData
 inst/doc
-temp
-tests
 out
+man
+# produced vignettes
+vignettes/*.html
+vignettes/*.pdf
+vignettes/*.R

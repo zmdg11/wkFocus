@@ -4,15 +4,15 @@
 \alias{wkf_pl_cstamps}
 \title{wkf_pl_cstamps}
 \usage{
-wkf_pl_cstamps(cst_df, pl_labs = NULL)
+wkf_pl_cstamps(ds_stack, pl_labs = NULL)
 }
 \arguments{
-\item{cst_df}{A standard codestamp data frame}
+\item{ds_stack}{A single dataframe of stacked cstamps}
 
 \item{pl_labs}{An optional list of ggplot2 plotting labels}
 }
 \value{
-A ggplot object showing how the work-focus codes in `cst_df` are distributed over session time.
+A ggplot object showing how the work-focus codes in `ds_stack` are distributed over session time.
 }
 \description{
 Will graph segments for all codes in the database. Uses a generic title. Add subtitle, y-axis label, etc. through `pl_labs` if wanted.

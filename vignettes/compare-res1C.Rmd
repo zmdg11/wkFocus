@@ -29,13 +29,13 @@ coders <- res1C_focus_hand_cstamp %>%
 coders
 
 ts <- res1C_focus_hand_cstamp[1:2] %>% 
-  map(~ wkf_tsample_cstamps(ds = ., dt = 1, warn = FALSE))
+  map(~ wkf_tsample(ds = ., dt = 1, warn = FALSE))
 
 tsAB <- as.data.frame(list(A = ts[[1]]$data, B = ts[[2]]$data))
 
 agreeAB <- tsAB %>%
   transpose() %>%
-  map_df(~ wkf_compAB_tsample(tsAB = .))
+  map_df(~ comp_ab_at_time(tsAB = .))
 
 agreeAB <- agreeAB %>%
   mutate(t = tsAB$A.t) %>%
@@ -57,7 +57,7 @@ cap <- paste0("Vertical bands show disagreements between coding datasets: \n",
              "Horizontal bands show codestamps for the dataset [1]")
 title <- "Plot of coding disagreements for phase res1A"
 
-wkf_pl_compAB(agreeAB$data, which = "D",
+wkf_pl_comps(agreeAB$data, which = "D",
           cst_df = res1C_focus_hand_cstamp[[1]]$data,
           pl_labs = list(caption = cap, title = title))
 ```
