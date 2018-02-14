@@ -1,6 +1,6 @@
 # --------------------------------------------------
 
-#' pl_blank_session
+#' wkf_pl_blank
 #'
 #' #' Uses a generic title. Add subtitle, y-axis label, etc through `pl_labs`
 #'
@@ -10,8 +10,9 @@
 #' @export
 #'
 #' @examples
+#' base_pl <- wkf_pl_blank(list(title = "Code intervals mapped over the session time"))
 
-pl_blank_session <- function(pl_labs = NULL) {
+wkf_pl_blank <- function(pl_labs = NULL) {
 
   ## Parameters -------------
 
@@ -50,14 +51,14 @@ pl_blank_session <- function(pl_labs = NULL) {
 #' @export
 #'
 #' @examples
-
+#' # See vignettes on comparing code datasets for examples.
 wkf_pl_comps <- function(ds_agrAB, to_plot = "D", ds_stack = NULL, pl_labs = NULL) {
 
-  df <- dplyr::filter(ds_agrAB, d == to_plot)
+  dat <- dplyr::filter(ds_agrAB$data, d == to_plot)
 
-  pl <- pl_blank_session() +
+  pl <- wkf_pl_blank() +
     # Plot vertical line only where disagreements are.
-    ggplot2::geom_segment(data = df, alpha = .4, color = "grey") +
+    ggplot2::geom_segment(data = dat, alpha = .1, color = "white") +
     ggplot2::aes(x = t, xend = t + 1, y = 0, yend = 7) +
     ggplot2::labs(y = "") +
     ggplot2::labs(pl_labs)
@@ -66,9 +67,9 @@ wkf_pl_comps <- function(ds_agrAB, to_plot = "D", ds_stack = NULL, pl_labs = NUL
   if (!is.null(ds_stack)) {
     pl <- pl +
       ggplot2::geom_segment(data = ds_stack$data,
-                            ggplot2::aes(x = In, xend = Out, y = Code, yend = Code),
-                            size = 3, alpha = 0.5) +
-      ggplot2::aes(color = Bin) +
+                  ggplot2::aes(x = In, xend = Out, y = code, yend = code),
+                  size = 8, alpha = 1.0) +
+      ggplot2::aes(color = bin) +
       ggplot2::scale_color_manual("", values = pars$fac_col)
   }
 
@@ -88,21 +89,21 @@ wkf_pl_comps <- function(ds_agrAB, to_plot = "D", ds_stack = NULL, pl_labs = NUL
 #' @export
 #'
 #' @examples
-
+#' # See vignettes on exploring code datasets for examples
 wkf_pl_cstamps <- function(ds_stack, pl_labs = NULL) {
 
   ## Parameters -------------
 
   # Get standard session plot object
-  pl <- pl_blank_session(
+  pl <- wkf_pl_blank(
     pl_labs = list(title = "Distribution of focus codes over the session time"))
 
   # Plot segment to mark code intervals. Color code by facilitation level
   pl <- pl +
     ggplot2::geom_segment(data = ds_stack$data,
-      ggplot2::aes(x = In, xend = Out, y = Code, yend = Code),
-                   size = 3, alpha = 0.5) +
-    ggplot2::aes(color = Bin) +
+      ggplot2::aes(x = In, xend = Out, y = code, yend = code),
+                   size = 5, alpha = 0.5) +
+    ggplot2::aes(color = bin) +
     ggplot2::scale_color_manual("", values = pars$fac_col) +
     ggplot2::labs(pl_labs)
 

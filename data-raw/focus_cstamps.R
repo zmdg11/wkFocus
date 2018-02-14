@@ -20,12 +20,12 @@ pars <- wkFocus::wkf_config()
 
 ## Functions  ----------------------
 
-read_raw_datasets <- function(SID) {
+read_raw_datasets <- function(sid) {
 
   ## Returns a list of raw wkFocus datasets from raw data in the sheets of
   #  an excel data file.
 
-  ds_src <- file.path(".", "data-raw", paste0(SID, "_focus.xlsx"))
+  ds_src <- file.path(".", "data-raw", paste0(sid, "_focus.xlsx"))
 
   ## Get specific dataset specs from sheet names
   ds_sheets <- readxl::excel_sheets(ds_src)  # chr[1:n] xxx_vvvvvvvv
@@ -34,11 +34,12 @@ read_raw_datasets <- function(SID) {
   ds_id <- ds_sheets %>%
     # sheet name is <chr> "coder_version"
     purrr::map( ~ stringr::str_split_fixed(string = ., "_", 2)) %>%
-    purrr::map( ~ list(sid = SID, coder = .[1], version = .[2]))
+    purrr::map( ~ list(sid = sid, coder = .[1], version = .[2]))
 
   ## Read codestamp data into a list of dfs
   ds_raw <- ds_sheets %>%
-    purrr::map(~ readxl::read_excel(path = ds_src, sheet = .))  # list <df, df...
+    purrr::map(~ readxl::read_excel(path = ds_src, sheet = .,
+                  col_names = c("coder", "bin", "In", "Out", "code")))
 
   ## Fold all the lists together and flip it so each element
   #  will be a fully specified raw dataset: src, sid, type, data
@@ -58,24 +59,28 @@ read_raw_datasets <- function(SID) {
 
 make_cstamp_datasets <- function(ds_raw) {
 
-  ## Returns a fully specified codestamp dataset (a list) from a fully specified
+  ## Returns a fully specified codestamp dataset ($type = "cstamp") from a
   #  raw dataset.
 
-  df <- ds_raw$data
+  # NB: CAPITALIZATION. Raw data file capitalizes the column names. These are
+  # changed to lowercase in all variable names, EXCEPT for "In" and "Out", to
+  # avoid conflict with R `in` operator.
+
+  dat <- ds_raw$data
   sid <- ds_raw$ds_id$sid
 
-  Type <- "focus"
+  type <- "focus"
 
   # Code from here is specific to research phase data. These session comprises
   # phase (= "res"), round, & group -------------------------
 
-  Round <- wkFocus::wkf_parse_sid(sid)$round
-  GID   <- wkFocus::wkf_parse_sid(sid)$gid
+  round <- wkFocus::wkf_parse_sid(sid)$round
+  gid   <- wkFocus::wkf_parse_sid(sid)$gid
 
   # In/Out marks must be hours:mins:secs:frames for timecode conversion rountine
   # to work. This is to be compatable with .edl formats exported from video
   # editing software.
-  df <- df %>%
+  dat <- dat %>%
     mutate(
       In  = paste("00", In, "00", sep = ":"),
       Out = paste("00", Out, "00", sep = ":")
@@ -83,29 +88,29 @@ make_cstamp_datasets <- function(ds_raw) {
 
   # The video-style timecodes need to be as POSIXct objects with a standard
   # origin for plotting with ggplot2
-  df <- df %>%
+  dat <- dat %>%
     mutate(
-      In  = wkFocus::wkf_convert_tcode(df$In, pars$fr, pars$t_workshop)$datetime,
-      Out = wkFocus::wkf_convert_tcode(df$Out, pars$fr, pars$t_workshop)$datetime
+      In  = wkFocus::wkf_convert_tcode(dat$In, pars$fr, pars$t_workshop)$datetime,
+      Out = wkFocus::wkf_convert_tcode(dat$Out, pars$fr, pars$t_workshop)$datetime
     )
 
   # Need standard factors across the project
-  df <- df %>%
+  dat <- dat %>%
     mutate(
-      Round = factor(Round, levels = pars$round_levels, ordered = TRUE),
-      GID   = factor(GID, levels = pars$GID_levels, ordered = TRUE),
-      Type  = factor(Type, levels = pars$code_types, ordered = TRUE),
-      Bin   = factor(Bin, levels = pars$facil_codes, ordered = TRUE),
-      Code  = factor(Code, levels = pars$focus_codes, ordered = TRUE)
+      round = factor(round, levels = pars$round_levels, ordered = TRUE),
+      gid   = factor(gid, levels = pars$gid_levels, ordered = TRUE),
+      type  = factor(type, levels = pars$code_types, ordered = TRUE),
+      bin   = factor(bin, levels = pars$facil_codes, ordered = TRUE),
+      code  = factor(code, levels = pars$focus_codes, ordered = TRUE)
     )
 
   # Put in order by 'scope'
-  df <- df %>%
-    select(Round, GID, Type, Bin, In, Out, Code)
+  dat <- dat %>%
+    select(round, gid, type, bin, In, Out, code)
 
   # Build the cstamp dataset on top of the raw dataset keeping src, SID same
   ds_raw$ds_type <- "cstamp"
-  ds_raw$data <- df
+  ds_raw$data <- dat
 
   return(ds_raw)
 }

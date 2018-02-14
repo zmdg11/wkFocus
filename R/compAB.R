@@ -44,35 +44,35 @@ compAB_codes <- function(A, B) {
 #'
 #' Compares all coding decisions made by two coders (A, B) at a given time.
 #'
-#' @param AB A list containing timesamples for two coders, A and B.
+#' @param AB A list combining two timesamples for two coders, A and B.
 #'
 #' @return A list giving the time and the two agreement decisions at that time.
 #'
 #' @examples
 #' # One agreement
-#' AB1 <- list(A.focus1 = "Rd", A.focus2 = NA_character_,
-#'             B.focus1 = "Rd", B.focus2 = NA_character_)
+#' AB1 <- list(focus1.A = "Rd", focus2.A = NA_character_,
+#'             focus1.B = "Rd", focus2.B = NA_character_)
 #' comp_ab_at_time(AB1)
 #' # Two agreements - order doesn't matter
-#' AB2 <- list(A.focus1 = "Rd", A.focus2 = "Do",
-#'             B.focus1 = "Do", B.focus2 = "Rd")
+#' AB2 <- list(focus1.A = "Rd", focus2.A = "Do",
+#'             focus1.B = "Do", focus2.B = "Rd")
 #' comp_ab_at_time(AB2)
 #' # One agreement, one disagreement
-#' AB3 <- list(A.focus1 = "Rd", A.focus2 = "Do",
-#'             B.focus1 = "Rd", B.focus2 = NA_character_)
+#' AB3 <- list(focus1.A = "Rd", focus2.A = "Do",
+#'             focus1.B = "Rd", focus2.B = NA_character_)
 #' comp_ab_at_time(AB3)
 #' # One agreement, one disagreement
-#' list(A.focus1 = "Rd", A.focus2 = "Do",
-#'      B.focus1 = "Ds", B.focus2 = "Rd") %>%
+#' list(focus1.A = "Rd", focus2.A = "Do",
+#'      focus1.B = "Ds", focus2.B = "Rd") %>%
 #'   comp_ab_at_time()
 #' # Two disagreements
-#' list(A.focus1 = "Rd", A.focus2 = "Do",
-#'      B.focus1 = "Rp", B.focus2 = "Ds") %>%
+#' list(focus1.A = "Rd", focus2.A = "Do",
+#'      focus1.B = "Rp", focus2.B = "Ds") %>%
 #'   comp_ab_at_time()
 #' \dontrun{
 #' # Coder B has duplicte code - error
-#' AB_err <- list(A.focus1 = "Rd", A.focus2 = NA_character_,
-#'                B.focus1 = "Rd", B.focus2 = "Rd")
+#' AB_err <- list(focus1.A = "Rd", focus2.A = NA_character_,
+#'                focus1.B = "Rd", focus2.B = "Rd")
 #' comp_ab_at_time(AB_err)}
 #' # Can use `map()` to produce a data frame of decisions
 #' AB1_3 <- as.data.frame(rbind(AB1, AB2, AB3))
@@ -85,6 +85,13 @@ compAB_at_time <- function(AB) {
   #
   #  Rows hold match-decisions comparing a code from coder A against both
   #  codes for coder B.
+
+  debug <- FALSE
+
+  if (debug) {
+    message("CompAB_at_time: AB")
+    print(paste(AB, collapse = ", "))
+  }
 
   mm <- matrix(nrow = 2, ncol = 2)  # dimnames = list(c("A1", "A2"), c("B1", "B2"))
 
@@ -137,20 +144,32 @@ compAB_at_time <- function(AB) {
 #'
 #' Compares the codings in two datasets.
 #'
+#' @param ds_list List of two "tsample" datasets ($ds_type = "tsample")
 #' @param bt POSIXct object giving the time to begin sampling. If NULL, sampling will begin at the time of the latest beginning.
 #' @param et POSIXct object given the time to end sampling. If NULL, sampling will end at the time of the earliest ending.
 #'
-#' @return An agreement dataset ($ds_type = "agreeAB")
+#' @return An agreement dataset ($ds_type = "agrAB")
 #' @export
 #'
 #' @examples
-wkf_compAB <- function(ds_tsA, ds_tsB, bt = NULL, et = NULL) {
+#' # See vignettes comparing two datasets for examples of time sampling
+wkf_compAB <- function(ds_list, bt = NULL, et = NULL) {
+
+  debug <- FALSE
 
   ## Parameters
   #  Uses internal package data `pars`
 
-  tsA   <- ds_tsA$data
-  tsB   <- ds_tsB$data
+  ## Get A and B datasets.
+
+  if (length(ds_list) < 2) {
+    stop("Less than two datasets")
+  } else if (length(ds_list) > 2) {
+    warning("More than two datasets. First two will be compared.")
+  }
+
+  tsA   <- ds_list[[1]]$data
+  tsB   <- ds_list[[2]]$data
 
   ## Basic error checking of input
   if (!identical(tsA$t, tsB$t)) stop("timesampling differs between A & B")
@@ -160,7 +179,7 @@ wkf_compAB <- function(ds_tsA, ds_tsB, bt = NULL, et = NULL) {
   if (is.null(et)) et <- min(max(tsA$t), max(tsB$t))
 
   ## Joint two time-samplings to get list of  t x (f1A, f2A, f1B, f2B)
-  agreeAB <- left_join(tsA, tsB, by = c("t"), suffix = c(".A", ".B")) %>%
+  agrAB <- left_join(tsA, tsB, by = c("t"), suffix = c(".A", ".B")) %>%
     # ... compare algorithm doesn't need time
     select(-t) %>%
     # ... flip 4 lists of codes into list of 4 codes at t
@@ -168,10 +187,15 @@ wkf_compAB <- function(ds_tsA, ds_tsB, bt = NULL, et = NULL) {
     # ... compare each set of 4 codes for dis/agreements between coders at t
     map_df(compAB_at_time)
 
+ if (debug) {
+   message("wkf_compAB: Head of agrAB")
+   print(head(agrAB))
+ }
+
   ## Organize and clean up final dataset of timestamped dis/agreement compsarisons
-  agreeAB <-
+  agrAB <-
     # ... add timestamp back to pairs of comparisons
-    bind_cols(t = tsA$t, agreeAB) %>%
+    bind_cols(t = tsA$t, agrAB) %>%
     # ... gather all comparisons into a single column (w = which decision)
     gather(w, d, d1:d2) %>%
     select(-w) %>%
@@ -182,9 +206,9 @@ wkf_compAB <- function(ds_tsA, ds_tsB, bt = NULL, et = NULL) {
 
   ## return a ds_agrAB dataset
   return(list(
-    ds_src  = list(A = ds_tsA$ds_src, B = ds_tsB$ds_src),
-    ds_id   = list(A = ds_tsA$ds_id,  B = ds_tsB$ds_id),
+    ds_src  = list(A = ds_list[[1]]$ds_src, B = ds_list[[2]]$ds_src),
+    ds_id   = list(A = ds_list[[1]]$ds_id,  B = ds_list[[2]]$ds_id),
     ds_type = "agrAB",
-    data    = agreeAB
+    data    = agrAB
   ))
 }

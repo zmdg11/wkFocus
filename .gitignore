@@ -2,9 +2,9 @@
 .Rhistory
 .RData
 inst/doc
-out
 man
 # produced vignettes
 vignettes/*.html
 vignettes/*.pdf
 vignettes/*.R
+vignettes/out

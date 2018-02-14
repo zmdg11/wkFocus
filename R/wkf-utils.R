@@ -2,14 +2,12 @@
 
 #' wkf_build_dsdesc
 #'
-#' Builds a dataset descriptor list from an existing dataset descriptor and specified dataset identifiers.
+#' Deprecated. Builds a dataset descriptor list from an existing dataset descriptor and specified dataset identifiers.
 #'
 #' @param dslist A dataset descriptor list with either the name element or a set of initial dataset identifiers present.
 #' @param change A list specifying how dataset identifiers should be replaced.
 #'
 #' @return A dataset descriptor list. The first element (name) will be the dataset name createc by applying any change elements to the description in `dslist`. Elements 2:7 (sid, type, method, coder, version, and stampe) will be the component identifiers of that name. Any identifiers unspecied by `dslist$name` and `change` will be "".
-#'
-#' @export
 #'
 #' @examples
 #' dsid <- list("", "res2C", "focus", "video", "mdg", "20180101", "cstamp")
@@ -72,16 +70,19 @@ wkf_build_dsdesc <- function(dslist = NULL, change = NULL) {
 
 #-----------------------------------------------------
 
-#'wkf_config
+#' wkf_config
 #'
-#'Provides the project configuration file establishing global parameters such as
-#'plotting scales, color codes for factor levels, etc.
+#' Provides the project configuration file establishing global parameters such as
+#' plotting scales, color codes for factor levels, etc.
 #'
-#'@return A list of named parameters configuring this project
-#'@export
+#' @return A list of named parameters configuring this project
+#' @export
 #'
+#' @examples
+#' pars <- wkf_config()
+
 wkf_config <- function() {
-  return(pars)  # `pars` is in package environment via `sysdata.Rda`
+  return(wkFocus::pars)  # `pars` is in package environment via `sysdata.Rda`
 }
 
 #-----------------------------------------------------
@@ -136,13 +137,11 @@ wkf_convert_tcode <- function (tcode, fr, origin) {
 
 #' wkf_parse_dspath
 #'
-#' Extracts the file name in `path`, excluding any extention, and parses it for component identifiers of a work-focus coding dataset. The identifiers are located soley by their position in the file name.
+#' Deprecated. Extracts the file name in `path`, excluding any extention, and parses it for component identifiers of a work-focus coding dataset. The identifiers are located soley by their position in the file name.
 #'
 #' @param path Path to a file holding a work focus dataset, or the name of a dataset. The dataset name should be of the form sid-type-method-coder-version-stamp. Trailing identifiers can be missing.
 #'
 #' @return A list with the full dataset name (`name`), the session ID (`sid`), the code type (`type`),the method (`method`), the coder (`coder`), the version (`version`), and the type of stamp (`stamp`). Missing trailing identifiers will return as "". An empty file path returns a descriptor with empty identifiers.
-#'
-#' @export
 #'
 #' @examples
 #' path <- "~/data/res2C_focus_hand_mdg_20180101_cstamp.Rda"
@@ -189,13 +188,22 @@ wkf_parse_dspath <- function(path = "") {
   return(tmp)
 }
 
+# --------------------------------------------------
+
 #' wkf_parse_sid
 #'
-#' Breaks a session ID into component identifiers for the session and returns a list of identifiers that can be used to build a dataset descriptor. The results depends of which phase the session is in.
+#' Breaks a session ID into component identifiers for the session and returns a
+#' list of identifiers that can be used to build a dataset descriptor.
 #'
 #' @param sid A single character string showing the session ID, "res1A", etc.
 #'
 #' @return A list of descriptor IDs characterizing the session.
+#'
+#' @details
+#' The results depends of which phase the session is in. Currently,
+#' only research phase IDs are recognized. Unrecognized session IDs return the
+#' `sid` for the phase and NAs for other list elements.
+#'
 #' @export
 #'
 #' @examples
@@ -206,7 +214,11 @@ session <- list()
   if (stringr::str_detect(sid, "^res")) {
     session$phase <- "res"
     session$round <- stringr::str_match(sid, "^res(\\d)")[,2]
-    session$gid <- stringr::str_match(sid, "^res\\d(.)")[,2]
+    session$gid   <- stringr::str_match(sid, "^res\\d(.)")[,2]
+  } else {
+    session$phase <- sid
+    session$round <- NA
+    session$gid   <- NA
   }
   return (session)
 }

@@ -1,6 +1,6 @@
 library(jsonlite)  # read, write, make JSON arrays
 
-## Configure: Make global decisions one for all ---------------------
+## Configure: Make global decisions once for all ---------------------
 
 wd <- normalizePath(getwd())  # assumes wd is project directory
 
@@ -9,15 +9,11 @@ pars <- list(
 
   ## Conventions for where stuff is located
   project_folder = wd,
-  # relative path to working data: one level above project
-  data_folder = file.path(wd, "..", "data-working"),
   # Relative path to external images: one level above project
-  image_folder = file.path(wd, "..", "images"),
-  # Relative path to utility scripts: one level below project
-  utils = file.path(wd, "utils"),
+  image_folder = file.path(wd, "images"),
 
   # Workflow types for data sets
-  ds_type = c("cstamp", "tsample", "comp"),
+  ds_type = c("agrAB", "cstamp", "raw", "stack", "tsample"),
 
   ## Conventions for working with time stamps for code-stamps.
   # `t_workshop` is the conventional beginning for turnig timecodes from video
@@ -25,16 +21,14 @@ pars <- list(
   # clip are turned into real times by offsetting them from this time.
   t_workshop = paste("2016-08-16", "00:00:00 UTC"),
   t_min = paste("2016-08-16", "00:00:00 UTC"),
-  t_max = paste("2016-08-16", "00:17:30 UTC"),
+  t_max = paste("2016-08-16", "00:20:00 UTC"),
   fr = 25,  # Frame rate used in time-codes (fps)
-  # Limits for X-axes when graphing session data
 
   ## Factor levels for codestamp variables
-  # ... code_types = c("facilitation", "focus1", "focus2"),
   code_types = c("facilitation", "focus"),
   facil_codes = c("Ind", "Fac"),
   focus_codes = c("Rd", "Do", "Rp", "Ds", "O", "Of"),
-  GID_levels = c("A", "B", "C"),
+  gid_levels = c("A", "B", "C"),
   round_levels = c("1", "2"),
 
   ## Aesthetic conventions for color coding
@@ -42,11 +36,11 @@ pars <- list(
   code_col = c("#8c510a","#d8b365","#FF7F00", "#CD1076","#5ab4ac","#01665e"),
   # Colors for facilitation levels: from colorbrewer2, diverging scheme. Close
   # match to colors used in Adobe Premiere: c("orange", "olivedrab3")
-  fac_col = c("#f1a340", "#998ec3"),  #  facilitation type (Ind, Fac)
+  fac_col = c("#f1a340", "olivedrab3"),  #  facilitation type (Ind, Fac)
 
   # Need these to size images that come from video stills. I set several
   # standard sizes so they appear consistently within reports, vignettes, ...
-  # see notes
+  # see note in notes folder
   target_ppi = 150,  # print resolution for images
   miniPW = 640,      # pixel width of diss "mini" video clips (nHD)
   miniPH = 360,      # pixel height of...

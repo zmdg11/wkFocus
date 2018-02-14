@@ -34,8 +34,8 @@ fm <- c(
   "A focus on something not to do with the task at hand (describing and explaining the phenomenon)")
 
 # This df will be used to create nice tables in vignettes
-focus_code_description <- cbind(Code = fc, Name = fn, Meaning = fm)
+focus_code_description <- cbind(code = fc, name = fn, meaning = fm)
 # give it a version
 attributes(focus_code_description)$version <- Sys.Date()
 
-devtools::use_data(focus_code_description)
+devtools::use_data(focus_code_description, overwrite = TRUE)

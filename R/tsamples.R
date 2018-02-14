@@ -2,7 +2,44 @@
 
 #' wkf_tsample
 #'
-#' Samples a single cstamp dataset between two time stamps using a specified time step.
+#' Samples codes from a list of codestamp datasets. A wrapper for `wkf_tsample_one` that passes on datasets one at a time.
+#'
+#' @param ds_cstamp A list of codestamp datasets ($type = "cstamp").
+#' @param dt Sampling timestep. Defaults to 1 second.
+#' @param bt POSIXct object giving the time to begin sampling. If NULL, sampling will begin at the earliest time in the dataset.
+#' @param et POSIXct object given the time to end sampling. If NULL, sampling will end at the latest time in the dataset.
+#' @param verbose If TRUE, codes will be printed at each timestep and a summary of missing codes will be given.
+#' @param warn Logical. If true (default), warnings will be issued when an NA code
+#'
+#' @return A list of time-sample dataset ($type = "tsample").
+#' @export
+#'
+#' @examples
+#' smpl_codestamps <- resToy[c(1,2)]
+#' time_samples <- wkf_tsample(smpl_codestamps, dt = 60)
+#' str(time_samples)
+
+wkf_tsample <- function(ds_list, dt = 1, bt = NULL, et = NULL,
+                        verbose = FALSE, warn = TRUE) {
+
+  ## Basic error checking
+  if (dt <= 0) stop(paste("nonsensical timestep: dt =", dt))
+
+  ## Simple coercian to allow caller to pass a single ds_cstamp dataset
+  # xxx code at a later date. Not sure how to do it now mdg 2018-02-12
+
+  tmp <- ds_list %>%
+    map(~ wkf_tsample_one(ds_cstamp = ., dt = dt, bt = bt, et = et,
+                      verbose = verbose, warn = warn))
+
+  return(tmp)
+}
+
+# --------------------------------------------------
+
+#' wkf_tsample_one
+#'
+#' Samples codes from a single condestamp dataset.
 #'
 #' @param ds_cstamp A codestamp dataset ($type = "cstamp").
 #' @param dt Sampling timestep. Defaults to 1 second.
@@ -15,19 +52,12 @@
 #' @export
 #'
 #' @examples
-#' smpl_codestamps <- res1A_focus_hand_cstamp[[1]]
-#' time_samples <- wkf_tsample(smpl_codestamps)
+#' smpl_codestamps <- resToy[c(1,2)]
+#' time_samples <- wkf_tsample(smpl_codestamps, dt = 60)
 #' str(time_samples)
+wkf_tsample_one <- function(ds_cstamp, dt = 1, bt = NULL, et = NULL,
+                verbose = FALSE, warn = TRUE) {
 
-wkf_tsample <- function(ds_cstamp, dt = 1, bt = NULL, et = NULL,
-                        verbose = FALSE, warn = TRUE) {
-
-  if (ds_cstamp$ds_type != "cstamp")
-    stop ("Data set type (", ds_cstamp$ds_type, ") is not for time sampling.")
-
-  if (dt <= 0) stop(paste("nonsensical timestep: dt =", dt))
-
-  ## Parameters
   #  Uses internal package data `pars`
 
   src     <- ds_cstamp$ds_src
@@ -39,7 +69,8 @@ wkf_tsample <- function(ds_cstamp, dt = 1, bt = NULL, et = NULL,
 
   ## Set up blank time sample data frame
   tsample_df <- dplyr::data_frame(
-    t = .POSIXct(double(), tz = "UTC"),  # create a null time var
+    t      = .POSIXct(double(), tz = "UTC"),  # create a null time var
+    bin    = factor(levels = pars$facil_codes, ordered = TRUE),
     focus1 = factor(levels = pars$focus_codes, ordered = TRUE),
     focus2 = factor(levels = pars$focus_codes, ordered = TRUE))
 
@@ -54,18 +85,19 @@ wkf_tsample <- function(ds_cstamp, dt = 1, bt = NULL, et = NULL,
 
     smple <- dplyr::filter(cstamps, In <= t, t <= Out)
     if (verbose) {                       #  for tracking
-      print(paste(t, smple$Code))
+      print(paste(t, smple$code))
     }
     if (warn) {                          #  for suspect datasets
-      if (is.na(smple[1, ]$Code))
-        warning(paste("No codes at time", t, "for", paste(id, collapse = "...")),
+      if (is.na(smple[1, ]$code))
+        warning(paste("No codes at time", t, "for", paste(id, collapse = ".")),
                 call. = FALSE)
     }
 
     # If only one codestamp in `smple`, the other will report as NA.
-    tsample_df[i, ]$t = t
-    tsample_df[i, ]$focus1 <- smple[1, ]$Code
-    tsample_df[i, ]$focus2 <- smple[2, ]$Code
+    tsample_df[i, ]$t      <- t
+    tsample_df[i, ]$bin    <- smple[1, ]$bin
+    tsample_df[i, ]$focus1 <- smple[1, ]$code
+    tsample_df[i, ]$focus2 <- smple[2, ]$code
     t  <- t + dt
     i <- i + 1
   }

@@ -1,26 +1,27 @@
 #' wkf_stack_cstamps
 #'
-#' Combines the codestamps from several codeset datasets into a codestack dataset ($ds_type = "stack").
+#' Combines the codestamps from several codestamp datasets into a codestack dataset suitable for plotting code intervals.
 #'
-#' @param ds_list A list of `ds_cstamp`s (fully specified codestamp datasets).
+#' @param ds_list A list of `codestamp datasets ($ds_type = "cstamp").
 #'
-#' @return A codestamp stack dataset
+#' @return A codestack dataset ($ds_type = "stack").
 #' @export
 #'
 #' @examples
+#' # See vignettes on exploring datasets for examples.
 wkf_stack_cstamps <- function(ds_list) {
 
   ## Stack the codestamps and append sourcing information
   df <- ds_list %>%
     # ... make a list of data frames with sourcing info added to each
     purrr::map(~ dplyr::mutate(.data = .x$data,
-                               Coder = .x$ds_id$coder,
-                               Version = .x$ds_id$version)) %>%
+                               coder = .x$ds_id$coder,
+                               version = .x$ds_id$version)) %>%
     # ... reorder variables in each data frame and combine into a single data
     # frame. The added varible `Src` allows traceback to the data file
     purrr::map_df( ~ dplyr::select(.data = .x,
-                                   Round, GID, Type, Coder, Version, Bin, In, Out, Code),
-                                   .id = "Src")
+                      round, gid, type, coder, version, bin, In, Out, code),
+                      .id = "Src")
 
   ## Collect sources files and session IDs for each dataset
   src <- ds_list %>%
