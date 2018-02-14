@@ -79,9 +79,9 @@ In the research phase, participants formed small work-groups and were tasked by 
 
 # Build a tbl describing sessions
 tmp <-   read_session_tbl() %>% 
-    left_join(read_group_tbl(), by = "GID") %>%
+    left_join(read_group_tbl(), by = "gid") %>%
     mutate(Length = Duration/60) %>% 
-    select(Round, `Group` = GID, Phenomenon, Mins = Length)
+    select(round, `Group` = gid, Phenomenon, Mins = Length)
 # Convert it to an xtable object
 tmp <- xtable(tmp, digits = 0)
 # Capture it in a latex tabular environment to be put into the margin below
@@ -124,7 +124,7 @@ pander(fc_tbl, justify = c("left", "left", "left"),
 
 # The Focus Code Dataset
 
-The observational unit in the dataset is a "codestamp", seven variables describing a single code interval. A codestamp comprises: two variables (`Code`, `Type`) giving the code and it's type, two variables (`In`, `Out`) giving beginning and end timestamps of the code interval relative to the start of the video, two (`Round`, `GID`) identifying the round and group that was coded, and one (`Bin`) identifying the facilitation level at the time. 
+The observational unit in the dataset is a "codestamp", seven variables describing a single code interval. A codestamp comprises: two variables (`code`, `type`) giving the code and it's type, two variables (`In`, `Out`) giving beginning and end timestamps of the code interval relative to the start of the video, two (`round`, `gid`) identifying the round and group that was coded, and one (`bin`) identifying the facilitation level at the time. 
 
 The overlaid code texts and the In / Out markers for each coded video were exported from the Premiere Pro project files to editable text files. These were manipulated using the _R_ statistical language (a) to recode the complex video timecodes into numeric "timestamps", and (b) to add context information to each coded interval. This augmented data was then saved as _R_ dataframe tables. The tables for each session were then combined into a single dataset. This final focus codeset contains 205 codestamps covering all groups for both rounds.
 
@@ -154,7 +154,7 @@ The purpose of this exploration is to evaluate the integrety of the focus code d
 
 ## Consitency and patterns in the number and types of codes 
 
-The seven codestamp variables in the dataset are summarized in Table 2. For the catgorical variables, `Round`, `GID` (group ID), `Bin`, `Type`, and `Code`, the table gives tallies of how many codes are found at the different levels of the variable. For example, there are 79 codes at level 1 of the variable `Round`. For the time variables, `In` and `Out`, the table describes how codes' beginnng and end times are distributed. For example, the lowest beginning time for a code was at the beginning of a session, and the latest ending time was at 17 min, 1 sec
+The seven codestamp variables in the dataset are summarized in Table 2. For the catgorical variables, `round`, `gid` (group ID), `bin`, `type`, and `code`, the table gives tallies of how many codes are found at the different levels of the variable. For example, there are 79 codes at level 1 of the variable `round`. For the time variables, `In` and `Out`, the table describes how codes' beginnng and end times are distributed. For example, the lowest beginning time for a code was at the beginning of a session, and the latest ending time was at 17 min, 1 sec
 
 ```{r variable-summaries}
 
@@ -165,7 +165,7 @@ kable(summary(focus_code_df),
 
 ```
 
-All of the codes focus types as they should be since this is a database of "focus" codes only. Of the 205 code intervals, 79 are in round 1 and 126 in round 2, implying that the focus of work in the second round was overall more fragmented. Group B had the largest number of codes, meaning that they changed focus most often overall. There are 131 focus codes under independent work and 74 under facilitated work, which should happen if the groups had more indpendent time than facilitated time, and could also suggest facilitated work changed focus less often. The distribution of `Code` levels shows there was very little off-task work and that most of the work was focused on doing, followed by representing, and then working on instructions.
+All of the codes focus types as they should be since this is a database of "focus" codes only. Of the 205 code intervals, 79 are in round 1 and 126 in round 2, implying that the focus of work in the second round was overall more fragmented. Group B had the largest number of codes, meaning that they changed focus most often overall. There are 131 focus codes under independent work and 74 under facilitated work, which should happen if the groups had more indpendent time than facilitated time, and could also suggest facilitated work changed focus less often. The distribution of `code` levels shows there was very little off-task work and that most of the work was focused on doing, followed by representing, and then working on instructions.
 
 The distributions of the timestamps seem reasonable. In markers begin at the start of a session and end before the end of the longest session, as they should. Out markers begin after the first In marker and end at the length of the longest session, as they should. Means are slighly higher than medians, indicating each distribution has a modest right skew.
 
@@ -173,19 +173,19 @@ The distributions of the timestamps seem reasonable. In markers begin at the sta
 
 ```{r code-tallies, fig.fullwidth = TRUE}
 
-# Tallies of total codings by session (Round x GID)
+# Tallies of total codings by session (round x gid)
 l1_tmp <- focus_code_df %>%
-  group_by(Round, GID) %>%
+  group_by(round, gid) %>%
   summarize(RxG = n())
 
-# Tallies of codes by round (Round x Code)
+# Tallies of codes by round (round x code)
 l2_tmp <- focus_code_df %>%
-  group_by(Round, Code) %>%
+  group_by(round, code) %>%
   summarize(RxC = n())
 
-# Tallies of codes by round (GID x Code)
+# Tallies of codes by round (gid x code)
 l3_tmp <- focus_code_df %>%
-  group_by(GID, Code) %>%
+  group_by(gid, code) %>%
   summarize(GxC = n())
 
 # Pad dfs with NA. Will make use of this in kable
@@ -206,7 +206,7 @@ rm(l1_tmp, l2_tmp, l3_tmp, nr_tmp)  # not needed anymore
 
 `r newthought("The distributions of In and Out timestamps over time")` are summarized in Figure 2. Since, for all code intervals, In markers should come before Out markers, the data should show more In than out early in the session and more Out than In later, and roughly the same in between. This is borne out by the data. 
 
-```{r focus-inout-histogram, fig.margin = TRUE, fig.height = 3, fig.cap = "Distribution of In and Out timestamps by Round and Group. There are more In codes than Out codes at the beginning, and vice versa at the end."}
+```{r focus-inout-histogram, fig.margin = TRUE, fig.height = 3, fig.cap = "Distribution of In and Out timestamps by round and Group. There are more In codes than Out codes at the beginning, and vice versa at the end."}
 
 # Stack cstamps so codes can be grouped by whether they mark In or Out
 gather(focus_code_df, key = In_Out, value = Time, In, Out) %>% 
@@ -224,14 +224,14 @@ Plots of In timestaps vs. Out timestamps for each round displayed in Figure 3. T
 
 ```{r focus-out-v-in, fig.fullwidth = FALSE, fig.cap = "Looking for unlikely code intervals. Higher points are for longer code intervals. Points close to the line are for short intervals. Points below the line would have Out < In"}
 
-# Out vs. In stamps by Code and Round
+# Out vs. In stamps by Code and round
 ggplot(focus_code_df) +
-  geom_point(aes(x = In, y = Out, col = Code)) +
+  geom_point(aes(x = In, y = Out, col = code)) +
   geom_abline(slope = 1, intercept = 0, col = "grey") +
   scale_color_manual(values = pars$code_col) +
   labs(list(title = "Out times vs. In times, paneled by Coder",
             caption = "res2A")) +
-   facet_wrap(~ Coder)
+   facet_wrap(~ coder)
 
 ```
 
@@ -252,7 +252,7 @@ These displays highlight codestamps that are out of place or suspiciously long. 
 # alterations.
 
 # Apply these whenever a new base segplot is made
-pl_labels <- list(y = "Focus code", color = "Type", caption = "res2A")
+pl_labels <- list(y = "Focus code", color = "type", caption = "res2A")
 
 focus_segplot <- wkf_pl_cstamps(focus_code_df, pl_labs = pl_labels)
 
@@ -277,7 +277,7 @@ The graph shows that by far most of the work focused on doing and representing. 
 #  Plot 2: Put each round in a separate panel
 focus_segplot_1b <- focus_segplot_1a +
   labs(list(subtitle = "Panels indicate the two different coders")) +
-  facet_wrap(~ Coder, ncol = 1)
+  facet_wrap(~ coder, ncol = 1)
 
 focus_segplot_1b + theme_bw() + theme(strip.text = element_text(size = 6))
 
@@ -291,7 +291,7 @@ Round two was longer by about 2 minutes. The pattern Rd, Do, Rp holds for round 
 ```{r focus-segplot-1c, fig.width = 6.5, fig.height = 6, fig.fullwidth = TRUE, warning=FALSE, fig.cap = "Occurance of codes separated by session (round X group). The facilitator is engaged with each group, usually briefly, withing the first few minutes, always while groups are focused on the instructions."}
 
 focus_segplot_1c <- focus_segplot_1a + 
-  # Use geom_text to print phenomenon on each graph when faceted by Round and GID
+  # Use geom_text to print phenomenon on each graph when faceted by Round and gid
   geom_text(data = read_session_tbl(),
     # Place text left of t0 and on the "Of" code line
     aes(x = ymd_hms(pars$t_workshop), hjust = "left",
@@ -301,7 +301,7 @@ focus_segplot_1c <- focus_segplot_1a +
     nudge_x = 50, nudge_y = -0.5) +
   labs(list(subtitle = 
     "Panels indicate the round and group. \nThe phenomenon explored is printed on each graph.")) +
-  facet_wrap(~ GID * Round, ncol = 2)
+  facet_wrap(~ gid * round, ncol = 2)
 
 focus_segplot_1c + theme_bw() + theme(strip.text = element_text(size = 6))
 
@@ -319,7 +319,7 @@ Figure 7 shows group focus only during facilitation. This display gives both an 
 ```{r focus-segplot-2, fig.width = 6.5, fig.height = 6, fig.fullwidth = TRUE, warning=FALSE, fig.cap = "Group focus during facilitation overlaid for all groups and both rounds."}
 
 # Begin with new call to segplot function. (*Couldn't get %in% to work*)
-focus_segplot_2a <- filter(focus_code_df, Bin == "Fac")  %>% 
+focus_segplot_2a <- filter(focus_code_df, bin == "Fac")  %>% 
   pl_focus_segment_plot(pl_labs <- pl_labels) + 
   labs(list(title = "Work focus during facilitated work",
             subtitle = "Rounds and groups are overlaid"))

@@ -1,0 +1,68 @@
+---
+title: "Explore work-focus codes for `res1B`"
+subtitle: "Seeing the world differently"
+author: "Michael Garrett"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{"Explore-res1B"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, message = FALSE, warning = FALSE, echo = FALSE}
+
+# Packages -------------------------
+
+# Dataset manipulation
+library(dplyr)
+
+# Formating output
+library(knitr)
+library(kableExtra)
+library(pander)
+
+# Chunk options
+opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)  
+opts_chunk$set(comment = NA)  # do not prepend chunk results with a marker
+opts_chunk$set(fig.path = "images/")  # dump a copy of the figures here
+
+# Local parameters
+
+ds <- wkFocus::res1B_focus[[1]]
+
+```
+
+# Work focus
+
+## Focus Code Datasets
+
+The observational unit in any work-focus dataset is a "codestamp". 
+
+### What is a codestamp?
+
+seven variables describing an interval during a session . A codestamp comprises: two variables (`code`, `type`) giving the code and it's type, two variables (`In`, `Out`) giving beginning and end timestamps of the code interval relative to the start of the video, two (`round`, `gid`) identifying the round and group that was coded, and one (`bin`) identifying the facilitation level at the time. 
+
+The overlaid code texts and the In / Out markers for each coded video were exported from the Premiere Pro project files to editable text files. These were manipulated using the _R_ statistical language (a) to recode the complex video timecodes into numeric "timestamps", and (b) to add context information to each coded interval. This augmented data was then saved as _R_ dataframe tables. The tables for each session were then combined into a single dataset. This final focus codeset contains codestamps covering all groups for both rounds.
+
+```{r sample-data}
+
+# Display rows for inspection
+sample_n(ds$data, 5) %>% 
+  knitr::kable(format = "latex", 
+               booktabs = TRUE,
+               caption = paste("Random sample from dataset", ds$ds_id$sid)
+  ) %>% 
+  kable_styling(latex_options = "striped") %>%
+  footnote(
+    general = paste("Dataset ID:", paste(ds$ds_id, collapse = ", "),
+                    ". Type:", ds$ds_type),
+    general_title = ""
+  )
+
+```
+
+The `In` and `Out` variables show the timestamps for a code interval. The timestamp have the date of the workshop prepended to the session time to facilitate analysis with _R_, but only the time (HH:MM:SS) portion is interpretable. These are the orginal offsets from the beginning of a video recording of the session. Since sessions likely began at differing times, these In/Out timestamps cannot be used to align work _between_ sessions.
+
+Timecodes, timestamps, and codestamps are not the same thing. Due to the nature of videorecording, the _timecodes_ overlayed on the recording count time to the second, and then append the number of video frames since that second. The _timestamps_ computed by _R_ convert the frame count into an elapsed fraction of a second and adds that to the time. _Codestamps_ are the observational unit of the dataset, and inlcude the code and the timestamps plus the other contextual information.

@@ -1,0 +1,64 @@
+---
+title: "Compare work-focus codings in `res2A`"
+subtitle: "Seeing the world differently"
+author: "Michael Garrett"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::pdf_document
+vignette: >
+  %\VignetteIndexEntry{"Compare-within-res1B"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+
+library(tidyverse)  # map, mutate, filter, gather, select, group_by, summarize
+library(wkFocus)
+library(knitr)
+
+# Knitr chunk options
+opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)  
+opts_chunk$set(comment = NA)  # do not prepend chunk results with a marker
+opts_chunk$set(fig.path = "images/")  
+```
+
+## Compare
+
+```{r res2A}
+
+# Pick two datasets to compare
+inxAB <- c(1, 3)
+
+## Sample the two cstamp datasets being compared
+
+agrAB <- res2A_focus[inxAB] %>% 
+  wkf_tsample(dt = 1) %>% 
+  wkf_compAB()
+
+agrAB$data %>% group_by(d) %>% summarize(n = n())
+
+compID <- paste("res2A_focus", 
+                 paste(inxAB, collapse = "x"),
+                 format(Sys.Date(), "%Y%m%d"),
+                 sep = "_")
+
+# save(agrAB,
+#   file = file.path("out", paste0("agrAB_", compID, ".rda")))
+```
+
+```{r plot}
+
+cap   <- paste0("Vertical bands show disagreements between \n", 
+                 paste(agrAB$ds_id$A, collapse = "."), " & ",  
+                 paste(agrAB$ds_id$B, collapse = "."))
+
+title <- "Plot of coding disagreements for phase res2A"
+
+wkf_pl_comps(agrAB$data, to_plot = "D",
+             wkf_stack_cstamps(res2A_focus[inxAB]),
+             pl_labs = list(caption = cap, title = title)) +
+  facet_wrap( ~ coder, ncol = 1) +
+  theme_dark()
+```
+

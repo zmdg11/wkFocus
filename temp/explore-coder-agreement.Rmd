@@ -70,9 +70,9 @@ dsname$fname   <- ""
 dsname$Method  <- "handcode"
 dsname$Stamp   <- "cstamp"
 dsname$Phase   <- "res"
-dsname$Round   <- "1"  # ds with coding for all rounds combined
-dsname$GID     <- "C"  # ds with coding for all groups
-dsname$Type    <- "focus"  # only focus codes
+dsname$round   <- "1"  # ds with coding for all rounds combined
+dsname$gid     <- "C"  # ds with coding for all groups
+dsname$type    <- "focus"  # only focus codes
 dsname$Version <- "V20171228"
 
 dsname <- build_dsname(dsname)

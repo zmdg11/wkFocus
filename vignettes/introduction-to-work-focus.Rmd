@@ -1,0 +1,115 @@
+---
+title: "Introduction to focus and facilitation"
+subtitle: "Analyzing group work on the protoscientific modeling task"
+author: "Michael Garrett"
+date: "DRAFT: `r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{"Introduction"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, message = FALSE, warning = FALSE, echo = FALSE}
+
+## Packages -------------------------
+
+# Formating output
+library(knitr)
+library(kableExtra)
+library(pander)
+library(wkFocus)
+
+# Knitr chunk options
+opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)  
+opts_chunk$set(comment = NA)  # do not prepend chunk results with a marker
+opts_chunk$set(fig.path = "images/")  # dump a copy of the figures here
+
+```
+
+The _Seeing the world differently_ core workshop comprised 3 phases: the "research phase", the "conference phase", and the "publication phase". The data explored here is from the research phase. 
+
+In the research phase, I tasked small groups of teachers to work with a target phenomenon for about 20 minutes, with directions to "describe what you see and explain why it happens" using pencils and semi-structured forms called "flipbooks". When I called time, all groups moved to a new round of work using a different phenomenon. This effort by a group to "describe and explain" a simple phenomenon is the basic academic task I am exploring, and the sessions in which they worked at this task are the cases I am studying.
+
+### Sessions
+
+A "session" is a teacher work-group engaged in the task of "describing and explaining" a single phenomenon. There are six sessions in the research phase.
+
+To set up the tasks, I offered three physical phenomena for exploration: a stuffed toy being swung on a string ("Bear"), a half-filled bottle of ketchup ("Ketchup"), and a marble in a box ("Ball"). At the beginning of the research phase, I asked the teachers to form working groups for the remainder of the workshop. They formed three, which are identified in the study databases as "A", "B", and "C". Groups A and C had two members and group B had three. The groups went through two rounds together, so each group worked with two different phenomenon. The combination of two rounds with three groups each created the six sessions, which are described in the table below.
+
+```{r session-table}
+
+wkFocus::session_tbl %>% 
+  dplyr::left_join(wkFocus::group_tbl, by = "gid") %>% 
+  dplyr::mutate(sid = paste0("res", round, gid), mins = duration/60) %>% 
+  dplyr::select(sid, round, group = gid, phenomenon, mins) %>% 
+  knitr::kable(digits = 0,
+    col.names = c("Session ID", "Round", "Group ID", "Phenomenon", "Length (min)"),
+    caption = "Summary of the six research-phase sessions")
+```
+
+
+## Facilitation and focus. How groups work on tasks
+
+A core question I am asking in this study is whether I can compactly describe how a group works when engaging a prototypical scientific modeling task. My key interest is how a group moves between working with material enactions of a phenomenon and working with representations of their thinking about the phenomenon. A secondary question is how does this work change when the group engages a science adept? 
+
+I developed two coding schemes to help answer these questions. The _work focus_ codes describe how a group is engaging the task and the _facilitation_ codes describe whether they are working independently of the science adept. Both schemes are "exhaustive". By this I mean that every second of a session is coded for work focus and facilitation. However, only facilitation is "exclusive", because each second can have only one facilitation code. A group's work focus, though, can be assigned two codes at once, allowing for it's focus to be split. 
+
+### Work focus
+
+With work focus, I am wondering, is the group focusing on physical materials? Is it focusing on getting down what they think? Does it move between these? Have the left the physical world behind and are just talking from their heads? Do they even stay on task or do they wander away from the engagement as I described it for them?
+
+There are five on-task work-focus codes: Reading, Doing, Representing, Discussing, and Other on-task work. There is one code for when members are not focused on the academic task.
+
+The focus code set was finalized, after repeated coding passes, on the six codes defined below:
+
+```{r focus-code-table}
+
+# A printable copy of the coding scheme should be available in project storage
+
+pander::pander(wkFocus::focus_code_description, 
+               justify = c("left", "left", "left"), 
+               split.tables = 100, split.cells = c(2, 13, 70))
+
+```
+
+### Facilitation
+
+With facilitation, I am interested in whether the science adept has become part of the group while it works. There are only two codes for facilitation: Independent and facilitated. These are defined in the table below:
+
+```{r facilitation-code-table}
+
+# A printable copy of the coding scheme should be available in project storage
+
+pander::pander(wkFocus::facil_code_description, 
+               justify = c("left", "left", "left"), 
+               split.tables = 100, split.cells = c(2, 13, 70))
+
+```
+
+
+### Development of the coding schemes
+
+Initially, to track the answers to these questions, I defined only two on-task codes to capture whether a group was working on their representations or enacting the phenomenon. An initial coding of session `res1A` made it clear that groups focused on other things as well, for example, working to understand if they were "doing it right" or getting materials for their representations. 
+
+For each session, the recording was trimmed to the beginning and end of session work and standardized to the qHD industry standard display resolution of 960x540 pixels, and at 25 frames per second (fps). These trimmed videos were viewed using Adobe's Premiere Pro, which allowed forward and backward, slow- and high-speed, and frame-by-frame viewing. A code was applied with Premiere Pro over a "code interval" by marking the beginning (In) and end (Out) points for text that overlaid the code on the image (Figure 1). The timecode (lower right) gives minutes and seconds from the beginning of the trimmed recording. The last two digits give the number of video frames passed since the last tick of the seconds timer. All coding videos are encoded at 25 frames per second. This allows synching with other coding software to within 40 ms.
+
+```{r sample-video-frame, echo=FALSE, fig.cap = "Example frame of a coded video showing overlaid information. Coding information appears as title text overlaying the videorecording of the session."}
+
+include_graphics(file.path("images", "res2A-coded-0947-med.png"), dpi = 150)
+
+```
+
+If work was facilitated, a white marker appears in the upper left of a coded video. Focus codes display in the upper right corner. Focus codes during independent work display in orange and those applied during faciliated display in green. The round, group, and phenomenon being explored display in the bottom left along with the study participant IDs. A running "timecode" marking the position of the video from the beginning of the session displays in the lower right. ^[Because a group's focus can be split, there may be one or two focus codes displayed. Whether a code is first or second depends on the way codes were applied and carries no meaning.]
+
+## Coding method
+
+
+## Data - "Codestamps"
+
+The observational unit in the dataset is a "codestamp", seven variables describing a single code interval. A codestamp comprises: two variables (`code`, `type`) giving the code and it's type, two variables (`In`, `Out`) giving beginning and end timestamps of the code interval relative to the start of the video, two (`round`, `gid`) identifying the round and group that was coded, and one (`bin`) identifying the facilitation level at the time. 
+
+The `In` and `Out` variables show the timestamps for a code interval. The timestamp have the date of the workshop prepended to the session time to facilitate analysis with _R_, but only the time (HH:MM:SS) portion is interpretable. These are the orginal offsets from the beginning of a video recording of the session. Since sessions likely began at differing times, these In/Out timestamps cannot be used to align work _between_ sessions.
+
+Timecodes, timestamps, and codestamps are not the same thing. Due to the nature of videorecording, the _timecodes_ overlayed on the recording count time to the second, and then append the number of video frames since that second. The _timestamps_ computed by _R_ convert the frame count into an elapsed fraction of a second and adds that to the time. _Codestamps_ are the observational unit of the dataset, and inlcude the code and the timestamps plus the other contextual information. ^[For example, in Figure 1, the timecode displays 00:09:47:05, representing 9 min, 47 sec, and 5 frames. At 25 fps, the elapsed frames are equivalent to 0.2 seconds, and the elapsed time at that frame is 9 min, 47.2 sec. This would be rounded to produce the timestamp 00:09:47.]

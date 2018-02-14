@@ -93,9 +93,9 @@ dsname$fname   <- ""
 dsname$Method  <- "handcode"
 dsname$Stamp   <- "cstamp"
 dsname$Phase   <- "res"
-dsname$Round   <- "1"  # ds with coding for all rounds combined
-dsname$GID     <- "C"  # ds with coding for all groups
-dsname$Type    <- "focus"  # only focus codes
+dsname$round   <- "1"  # ds with coding for all rounds combined
+dsname$gid     <- "C"  # ds with coding for all groups
+dsname$type    <- "focus"  # only focus codes
 dsname$Version <- "V20171226"
 
 dsname <- build_dsname(dsname)
@@ -131,9 +131,9 @@ In the research phase, participants formed small work-groups and were tasked by 
 
 # Get tbl describing sessions
 tmp <-   read_session_tbl() %>% 
-    left_join(read_group_tbl(), by = "GID") %>%
+    left_join(read_group_tbl(), by = "gid") %>%
     mutate(Length = Duration/60) %>% 
-    select(Round, `Group` = GID, Phenomenon, Mins = Length)
+    select(, `Group` = gid, Phenomenon, Mins = Length)
 # Convert it to an xtable object
 tmp <- xtable(tmp, digits = 0)
 # Capture it in a latex tabular environment to be put into the margin in the report text below
@@ -184,7 +184,7 @@ pander(fc_tbl, justify = c("left", "left", "left"),
 
 # Example Focus Code Dataset
 
-The observational unit in the dataset is a "codestamp", seven variables describing a single code interval. A codestamp comprises: two variables (`Code`, `Type`) giving the code and it's type, two variables (`In`, `Out`) giving beginning and end timestamps of the code interval relative to the start of the video, two (`Round`, `GID`) identifying the round and group that was coded, and one (`Bin`) identifying the facilitation level at the time. 
+The observational unit in the dataset is a "codestamp", seven variables describing a single code interval. A codestamp comprises: two variables (`code`, `type`) giving the code and it's type, two variables (`In`, `Out`) giving beginning and end timestamps of the code interval relative to the start of the video, two (`round`, `gid`) identifying the round and group that was coded, and one (`bin`) identifying the facilitation level at the time. 
 
 The overlaid code texts and the In / Out markers for each coded video were exported from the Premiere Pro project files to editable text files. These were manipulated using the _R_ statistical language (a) to recode the complex video timecodes into numeric "timestamps", and (b) to add context information to each coded interval. This augmented data was then saved as _R_ dataframe tables. The tables for each session were then combined into a single dataset. This final focus codeset contains 205 codestamps covering all groups for both rounds.
 
@@ -193,7 +193,7 @@ Table 1 shows a random sample of codestamps from the dataset ` `r dsname$fname` 
 ```{r get-data}
 
 focus_code_df <- read_dataset(dsname) %>% 
-  filter(Coder %in% localPars$coder)
+  filter(coder %in% localPars$coder)
 # Display 5 rows for inspection
 kable(sample_n(focus_code_df, 10), 
   caption = paste("Random sample of code data from dataset", dsname$fname))

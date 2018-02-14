@@ -1,8 +1,14 @@
 ---
-title: "compare-res2A"
+title: "Compare work-focus codings in `res1B`"
+subtitle: "Seeing the world differently"
 author: "Michael Garrett"
-date: "1/10/2018"
-output: pdf_document
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{"Compare-within-res1B"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
@@ -14,22 +20,22 @@ library(wkFocus)
 
 ## Compare
 
-```{r res2A}
+```{r res1B}
 # List coders
-coders <- res2A_focus_hand_cstamp %>% 
+coders <- res1B_focus %>% 
   map("name") %>% 
   map(wkf_parse_dspath) %>% 
   map("coder")
 coders
 
-ts <- res2A_focus_hand_cstamp[1:2] %>% 
+ts <- res1B_focus[1:2] %>% 
   map(~ wkf_tsample(ds = ., dt = 1, warn = FALSE))
 
 tsAB <- as.data.frame(list(A = ts[[1]]$data, B = ts[[2]]$data))
 
 agreeAB <- tsAB %>%
   transpose() %>%
-  map_df(~ comp_ab_at_time(tsAB = .))
+  map_df(~ compAB_at_time(tsAB = .))
 
 agreeAB <- agreeAB %>%
   mutate(t = tsAB$A.t) %>%
@@ -49,10 +55,10 @@ save(agreeAB,
 cap <- paste0("Vertical bands show disagreements between coding datasets: \n", 
              "[1] ", agreeAB$names[[1]],  "\n [2] ", agreeAB$names[[2]], "\n",
              "Horizontal bands show codestamps for the dataset [1]")
-title <- "Plot of coding disagreements for phase res2A"
+title <- "Plot of coding disagreements for phase res1B"
 
 wkf_pl_comps(agreeAB$data, which = "D",
-          cst_df = res2A_focus_hand_cstamp[[1]]$data,
+          cst_df = res1B_focus[[1]]$data,
           pl_labs = list(caption = cap, title = title))
 ```
 
