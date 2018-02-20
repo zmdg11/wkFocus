@@ -24,7 +24,7 @@ library(kableExtra)
 library(pander)
 
 # Chunk options
-opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)  
+opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)  
 opts_chunk$set(comment = NA)  # do not prepend chunk results with a marker
 opts_chunk$set(fig.path = "images/")  # dump a copy of the figures here
 
