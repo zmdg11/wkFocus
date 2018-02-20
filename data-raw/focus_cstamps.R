@@ -38,8 +38,7 @@ read_raw_datasets <- function(sid) {
 
   ## Read codestamp data into a list of dfs
   ds_raw <- ds_sheets %>%
-    purrr::map(~ readxl::read_excel(path = ds_src, sheet = .,
-                  col_names = c("coder", "bin", "In", "Out", "code")))
+    purrr::map(~ readxl::read_excel(path = ds_src, sheet = .))
 
   ## Fold all the lists together and flip it so each element
   #  will be a fully specified raw dataset: src, sid, type, data
@@ -131,3 +130,6 @@ res2A_focus <- read_raw_datasets("res2A") %>%
   map(~ make_cstamp_datasets(.))
 devtools::use_data(res2A_focus, overwrite = TRUE)
 
+res2B_focus <- read_raw_datasets("res2B") %>%
+  map(~ make_cstamp_datasets(.))
+devtools::use_data(res2B_focus, overwrite = TRUE)
