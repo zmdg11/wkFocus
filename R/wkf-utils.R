@@ -72,8 +72,8 @@ wkf_build_dsdesc <- function(dslist = NULL, change = NULL) {
 
 #' wkf_config
 #'
-#' Provides the project configuration file establishing global parameters such as
-#' plotting scales, color codes for factor levels, etc.
+#' Provides access to the package configuration data establishing global
+#' parameters such as plotting scales, color codes for factor levels, etc.
 #'
 #' @return A list of named parameters configuring this project
 #' @export
@@ -82,7 +82,7 @@ wkf_build_dsdesc <- function(dslist = NULL, change = NULL) {
 #' pars <- wkf_config()
 
 wkf_config <- function() {
-  return(wkFocus::pars)  # `pars` is in package environment via `sysdata.Rda`
+  return(wkFocus:::pars)  # `pars` is in package environment via `sysdata.Rda`
 }
 
 #-----------------------------------------------------
