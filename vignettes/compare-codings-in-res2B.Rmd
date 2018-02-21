@@ -1,0 +1,110 @@
+---
+title: "Compare work-focus codings in `res2B`"
+subtitle: "Seeing the world differently"
+author: "Michael Garrett"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::pdf_document
+vignette: >
+  %\VignetteIndexEntry{"Compare-within-res1B"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+knitr::opts_chunk$set(fig.width = 7, fig.height = 7)
+
+library(tidyverse)  # map, mutate, filter, gather, select, group_by, summarize
+library(knitr)
+library(wkFocus)
+
+## Get global parameters
+
+pars <- wkf_config()
+
+## Set local vignette parameters
+
+ds_list_name <- "res2B_focus"
+
+```
+
+## Get data
+
+```{r load_dat}
+
+## Read dataset from package data into "Global" environment
+
+load(file.path("..", "data", paste0(ds_list_name, ".rda")))
+
+#  Flip parameter to a "Global" symbol to be used throughout vignette
+
+ds_list <-  eval(as.symbol(ds_list_name))
+
+```
+
+
+```{r inspect_dat}
+
+nsets <- length(ds_list)
+
+sessions <- ds_list %>% map_chr(c("ds_id", "sid"))
+coders   <- ds_list %>% map_chr(c("ds_id", "coder"))
+versions <- ds_list %>% map_chr(c("ds_id", "version"))
+
+## For display, get sids and data dimensions into a df 
+
+tmp <- ds_list %>% map_df("ds_id")
+ds_list %>% 
+  map_df( ~ list(obs = nrow(.x$data), vars = ncol(.x$data))) %>% 
+  bind_cols(tmp, .) %>% 
+  kable(caption = paste("Datasets in", ds_list_name))
+
+rm(tmp)
+
+```
+
+## Compare two codings
+
+```{r set_comp}
+
+## pick datasets to sample
+
+to_comp     <- c(A = 1, B = 2)
+time_step   <- 1  # sec
+```
+
+Sessions: `r sessions[to_comp]`; Coders: `r coders[to_comp]`; Versions: `r versions[to_comp]`.
+
+```{r decide_agr}
+
+## timesample each dataset
+ts_list <- wkf_tsample(ds_list[to_comp], dt = time_step)
+
+## compare coding decsions 
+agrAB <- wkf_compAB(ts_list)
+
+## summarize results
+agrAB$data %>% group_by(d) %>% summarize(n = n()) %>% 
+  kable(caption = paste("Summary of Agreements between codings"),
+        col.names = c("Decision", "Count")
+  )
+
+```
+
+
+```{r plot}
+
+cap   <- paste0("Vertical bands show disagreements between coding datasets: ", 
+            agrAB$ds_id$A$version, " & ", agrAB$ds_id$B$version)
+title <- paste0("Plot of coding disagreements for phase ", ds_list_name)
+
+wkf_pl_comps(agrAB, to_plot = "D",
+          ds_stack = wkf_stack_cstamps(ds_list),
+          pl_labs = list(caption = cap, title = title)) + 
+  theme_dark() +
+  facet_wrap(~coder, ncol = 1)
+
+```
+
