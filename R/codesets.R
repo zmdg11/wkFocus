@@ -21,7 +21,7 @@ wkf_stack_cstamps <- function(ds_list) {
     # frame. The added varible `Src` allows traceback to the data file
     purrr::map_df( ~ dplyr::select(.data = .x,
                       round, gid, type, coder, version, bin, In, Out, code),
-                      .id = "Src")
+                      .id = "src")
 
   ## Collect sources files and session IDs for each dataset
   src <- ds_list %>%
