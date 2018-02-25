@@ -133,3 +133,8 @@ devtools::use_data(res2A_focus, overwrite = TRUE)
 res2B_focus <- read_raw_datasets("res2B") %>%
   map(~ make_cstamp_datasets(.))
 devtools::use_data(res2B_focus, overwrite = TRUE)
+
+res2C_focus <- read_raw_datasets("res2C") %>%
+  map(~ make_cstamp_datasets(.))
+devtools::use_data(res2C_focus, overwrite = TRUE)
+
