@@ -1,12 +1,12 @@
 ---
-title: "Dataset 'res1B_focus': Initial exploration"
+title: "Dataset 'res2C_focus': Initial exploration"
 subtitle: "Seeing the world differently"
 author: "Michael Garrett"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_document
 vignette: >
-  %\VignetteIndexEntry{"Explore-res1B"}
+  %\VignetteIndexEntry{"Explore-res2C"}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -34,7 +34,7 @@ pars <- wkFocus::wkf_config()
 
 ## Set local vignette parameters
 
-ds_list_name <- "res1B_focus"
+ds_list_name <- "res2C_focus"
 
 ```
 

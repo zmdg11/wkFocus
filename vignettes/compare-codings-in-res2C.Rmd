@@ -1,5 +1,5 @@
 ---
-title: "Compare work-focus codings in `res2B`"
+title: "Compare work-focus codings in `res2C`"
 subtitle: "Seeing the world differently"
 author: "Michael Garrett"
 date: "`r Sys.Date()`"
@@ -26,7 +26,7 @@ pars <- wkf_config()
 
 ## Set local vignette parameters
 
-ds_list_name <- "res2B_focus"
+ds_list_name <- "res2C_focus"
 
 ```
 
