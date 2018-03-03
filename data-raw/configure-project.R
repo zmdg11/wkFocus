@@ -36,7 +36,8 @@ pars <- list(
   code_col = c("#8c510a","#d8b365","#FF7F00", "#CD1076","#5ab4ac","#01665e"),
   # Colors for facilitation levels: from colorbrewer2, diverging scheme. Close
   # match to colors used in Adobe Premiere: c("orange", "olivedrab3")
-  fac_col = c("#f1a340", "olivedrab3"),  #  facilitation type (Ind, Fac)
+  #fac_col = c("#f1a340", "olivedrab3"),  #  facilitation type (Ind, Fac)
+  fac_col = c('#bdbdbd', '#636363'),  # colorbrewer2.org['#f0f0f0','#bdbdbd','#636363']
 
   # Need these to size images that come from video stills. I set several
   # standard sizes so they appear consistently within reports, vignettes, ...

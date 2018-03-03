@@ -58,7 +58,7 @@ wkf_pl_comps <- function(ds_agrAB, to_plot = "D", ds_stack = NULL, pl_labs = NUL
 
   pl <- wkf_pl_blank() +
     # Plot vertical line only where disagreements are.
-    ggplot2::geom_segment(data = dat, alpha = .1, color = "white") +
+    ggplot2::geom_segment(data = dat, alpha = .4, color = "#F0F0F0") +
     ggplot2::aes(x = t, xend = t + 1, y = 0, yend = 7) +
     ggplot2::labs(y = "") +
     ggplot2::labs(pl_labs)
@@ -102,7 +102,7 @@ wkf_pl_cstamps <- function(ds_stack, pl_labs = NULL) {
   pl <- pl +
     ggplot2::geom_segment(data = ds_stack$data,
       ggplot2::aes(x = In, xend = Out, y = code, yend = code),
-                   size = 5, alpha = 0.5) +
+                   size = 5, alpha = 1.0) +
     ggplot2::aes(color = bin) +
     ggplot2::scale_color_manual("", values = pars$fac_col) +
     ggplot2::labs(pl_labs)
