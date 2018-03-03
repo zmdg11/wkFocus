@@ -1,20 +1,43 @@
 ---
-title: "Compare work-focus codings in `res2B`"
+title: "Compare 'res2B' codings"
 subtitle: "Seeing the world differently"
 author: "Michael Garrett"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::pdf_document
+  rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{"Compare-within-res1B"}
+  %\VignetteIndexEntry{"Compare-within-res2B"}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 12px;
+  }
+td {  /* Table  */
+  font-size: 12px;
+}
+h1.title {
+  font-size: 32px;
+}
+h1 { /* Header 1 */
+  font-size: 24px;
+}
+h2 { /* Header 2 */
+    font-size: 18px;
+}
+h3 { /* Header 3 */
+  font-size: 14px;
+}
+
+</style>
+
 ```{r setup, include=FALSE}
 
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
-knitr::opts_chunk$set(fig.width = 7, fig.height = 7)
+knitr::opts_chunk$set(fig.width = 7, fig.height = 5)
 
 library(tidyverse)  # map, mutate, filter, gather, select, group_by, summarize
 library(knitr)
@@ -67,7 +90,9 @@ rm(tmp)
 
 ## Compare two codings
 
-```{r set_comp}
+<P style="page-break-before: always">
+
+```{r comp_1_3}
 
 ## pick datasets to sample
 
@@ -75,7 +100,7 @@ to_comp     <- c(A = 1, B = 2)
 time_step   <- 1  # sec
 ```
 
-Sessions: `r sessions[to_comp]`; Coders: `r coders[to_comp]`; Versions: `r versions[to_comp]`.
+### Sessions: `r sessions[to_comp]`; Coders: `r coders[to_comp]`; Versions: `r versions[to_comp]`.
 
 ```{r decide_agr}
 
@@ -93,6 +118,7 @@ agrAB$data %>% group_by(d) %>% summarize(n = n()) %>%
 
 ```
 
+Plot
 
 ```{r plot}
 
@@ -101,9 +127,9 @@ cap   <- paste0("Vertical bands show disagreements between coding datasets: ",
 title <- paste0("Plot of coding disagreements for phase ", ds_list_name)
 
 wkf_pl_comps(agrAB, to_plot = "D",
-          ds_stack = wkf_stack_cstamps(ds_list),
+          ds_stack = wkf_stack_cstamps(ds_list[to_comp]),
           pl_labs = list(caption = cap, title = title)) + 
-  theme_dark() +
+  theme_bw() +
   facet_wrap(~coder, ncol = 1)
 
 ```

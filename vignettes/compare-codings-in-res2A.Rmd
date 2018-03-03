@@ -1,12 +1,12 @@
 ---
-title: "Compare 'res2C' codings"
+title: "Compare 'res2A' codings"
 subtitle: "Seeing the world differently"
 author: "Michael Garrett"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{"Compare-within-res2C"}
+  %\VignetteIndexEntry{"Compare-within-res2A"}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -49,7 +49,7 @@ pars <- wkf_config()
 
 ## Set local vignette parameters
 
-ds_list_name <- "res2C_focus"
+ds_list_name <- "res2A_focus"
 
 ```
 
@@ -96,7 +96,7 @@ rm(tmp)
 
 ## pick datasets to sample
 
-to_comp     <- c(A = 1, B = 2)
+to_comp     <- c(A = 1, B = 3)
 time_step   <- 1  # sec
 ```
 
