@@ -8,3 +8,4 @@ vignettes/*.html
 vignettes/*.pdf
 vignettes/*.R
 vignettes/out/
+vignettes/images/
