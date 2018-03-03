@@ -1,12 +1,12 @@
 ---
-title: "Dataset 'res2C_focus'. Initial exploration"
+title: "Dataset 'res2A_focus'. Initial exploration"
 subtitle: "Seeing the world differently"
 author: "Michael Garrett"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_document
 vignette: >
-  %\VignetteIndexEntry{"Explore-res2C"}
+  %\VignetteIndexEntry{"Explore-res2A"}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -58,7 +58,7 @@ pars <- wkFocus::wkf_config()
 
 ## Set local vignette parameters
 
-ds_list_name <- "res2C_focus"
+ds_list_name <- "res2A_focus"
 
 ```
 
@@ -70,7 +70,7 @@ ds_list_name <- "res2C_focus"
 load(file.path("..", "data", paste0(ds_list_name, ".rda")))
 
 # Flip parameter to a "Global" symbol to be used as a handle on the dataset
-#  throughout vignette. Eg, if ds_list_name is "res2C_focus", `ds_list` will
+#  throughout vignette. Eg, if ds_list_name is "res2A_focus", `ds_list` will
 #  point to a copy of the loaded dataset with that name.
 
 ds_list <-  eval(as.symbol(ds_list_name))
