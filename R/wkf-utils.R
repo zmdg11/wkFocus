@@ -60,7 +60,7 @@ wkf_convert_tcode <- function (tcode, fr, origin) {
   t_inst <- as.POSIXct(origin, tz = "UTC") + t_secs
 
   # Create data frame of timecodes, times, frames, and instants
-  df <- cbind(as_data_frame(t_matrix), as_data_frame(t_inst))
+  df <- cbind(as.data.frame(t_matrix), as.data.frame(t_inst))
   names(df) <- c("timecode", "time", "frames", "datetime")
 
   return(df)
