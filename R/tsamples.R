@@ -58,8 +58,6 @@ wkf_tsample <- function(ds_list, dt = 1, bt = NULL, et = NULL,
 wkf_tsample_one <- function(ds_cstamp, dt = 1, bt = NULL, et = NULL,
                 verbose = FALSE, warn = TRUE) {
 
-  #  Uses internal package data `pars`
-
   src     <- ds_cstamp$ds_src
   id      <- ds_cstamp$ds_id
   cstamps <- ds_cstamp$data
@@ -70,9 +68,9 @@ wkf_tsample_one <- function(ds_cstamp, dt = 1, bt = NULL, et = NULL,
   ## Set up blank time sample data frame
   tsample_df <- dplyr::data_frame(
     t      = .POSIXct(double(), tz = "UTC"),  # create a null time var
-    bin    = factor(levels = pars$facil_codes, ordered = TRUE),
-    focus1 = factor(levels = pars$focus_codes, ordered = TRUE),
-    focus2 = factor(levels = pars$focus_codes, ordered = TRUE))
+    bin    = factor(levels = getOption("wkf.facil.codes"), ordered = TRUE),
+    focus1 = factor(levels = getOption("wkf.focus.codes"), ordered = TRUE),
+    focus2 = factor(levels = getOption("wkf.focus.codes"), ordered = TRUE))
 
   t <- bt
   i <- 1

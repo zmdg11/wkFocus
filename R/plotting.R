@@ -17,7 +17,8 @@ wkf_pl_blank <- function(pl_labs = NULL) {
   ## Parameters -------------
 
   # std x-range for session graphs
-  t_rng <- lubridate::ymd_hms(c(pars$t_min, pars$t_max))
+  t_rng <- lubridate::ymd_hms(c(getOption("wkf.pltime.min"),
+                                getOption("wkf.pltime.max")))
 
   ## Build plot
 
@@ -30,7 +31,7 @@ wkf_pl_blank <- function(pl_labs = NULL) {
     # Do not drop absent factor levels
     ggplot2::scale_y_discrete(
       drop = FALSE,
-      labels = pars$focus_codes) +
+      labels = getOption("wkf.focus.codes")) +
     ggplot2::labs(pl_labs)
 
   return(pl)
@@ -70,7 +71,7 @@ wkf_pl_comps <- function(ds_agrAB, to_plot = "D", ds_stack = NULL, pl_labs = NUL
                   ggplot2::aes(x = In, xend = Out, y = code, yend = code),
                   size = 8, alpha = 1.0) +
       ggplot2::aes(color = bin) +
-      ggplot2::scale_color_manual("", values = pars$fac_col)
+      ggplot2::scale_color_manual("", values = getOption("wkf.facil.cols"))
   }
 
   return(pl)
@@ -104,7 +105,7 @@ wkf_pl_cstamps <- function(ds_stack, pl_labs = NULL) {
       ggplot2::aes(x = In, xend = Out, y = code, yend = code),
                    size = 5, alpha = 1.0) +
     ggplot2::aes(color = bin) +
-    ggplot2::scale_color_manual("", values = pars$fac_col) +
+    ggplot2::scale_color_manual("", values = getOption("wkf.facil.cols")) +
     ggplot2::labs(pl_labs)
 
   return(pl)
