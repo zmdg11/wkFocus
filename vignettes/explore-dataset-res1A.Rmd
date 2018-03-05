@@ -52,6 +52,10 @@ opts_chunk$set(comment = NA)  # do not prepend chunk results with a marker
 opts_chunk$set(fig.path = "images/")  # dump a copy of the figures here
 opts_chunk$set(fig.width = 10)
 
+# Ploting options
+options("wkf.pltime.max" = paste("2016-08-16", "00:15:00 UTC"))
+options("wkf.facil.cols"= c("#f1a340", "olivedrab3"))
+
 ## Get global parameters
 
 pars <- wkFocus::wkf_config()
