@@ -9,3 +9,5 @@ vignettes/*.pdf
 vignettes/*.R
 vignettes/out/
 vignettes/images/
+temp/*.html
+temp/*.pdf
