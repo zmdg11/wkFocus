@@ -6,15 +6,18 @@ build_toys <- function() {
   ## both end at the same time. If you rebuild, you may have to fiddle to get
   ## this to happen
 
+  library(wkFocus)
+
+  pars <- wkf_config()
+
   n = 6
 
   ## data 1
-  rounds <- factor(rep(1, n), levels = pars$round_levels, ordered = TRUE)
-  gids   <- factor(rep("A", n), levels = pars$gid_levels, ordered = TRUE)
+  rounds <- factor(rep(1, n), levels = pars$rounds, ordered = TRUE)
+  gids   <- factor(rep("A", n), levels = pars$gids, ordered = TRUE)
   types  <- factor(rep("focus", n), levels = pars$code_types, ordered = TRUE)
-
   bins   <- factor(c("Ind", "Fac", "Ind", "Ind", "Ind", "Ind"),
-                  levels = pars$facil_codes, ordered = TRUE)
+                  levels = study$facilitation$code, ordered = TRUE)
 
   Inc <- c("2016-08-16 00:00:00",
            "2016-08-16 00:00:28",
@@ -33,18 +36,17 @@ build_toys <- function() {
   Outs <- as.POSIXct(Outc)
 
   codes <- factor(c("Rd", "Do", "Rd", "Do", "O", "Rd"),
-                  levels = pars$focus_codes, ordered = TRUE)
+                  levels = study$focus$code, ordered = TRUE)
 
   dat1 <- data_frame(round = rounds, gid = gids, type = types, bin = bins,
                    In = Ins, Out = Outs, code = codes)
 
   ##data2
-  rounds <- factor(rep(1, n), levels = pars$round_levels, ordered = TRUE)
-  gids   <- factor(rep("A", n), levels = pars$gid_levels, ordered = TRUE)
+  rounds <- factor(rep(1, n), levels = pars$rounds, ordered = TRUE)
+  gids   <- factor(rep("A", n), levels = pars$gids, ordered = TRUE)
   types  <- factor(rep("focus", n), levels = pars$code_types, ordered = TRUE)
-
   bins   <- factor(c("Ind", "Fac", "Ind", "Ind", "Ind", "Ind"),
-                   levels = pars$facil_codes, ordered = TRUE)
+                   levels = study$facilitation$code, ordered = TRUE)
 
   Inc <- c("2016-08-16 00:00:00",
            "2016-08-16 00:00:20",
@@ -63,7 +65,7 @@ build_toys <- function() {
   Outs <- as.POSIXct(Outc)
 
   codes <- factor(c("Rd", "Do", "Rd", "Do", "Of", "Rd"),
-                  levels = pars$focus_codes, ordered = TRUE)
+                  levels = study$focus$code, ordered = TRUE)
 
   dat2 <- data_frame(round = rounds, gid = gids, type = types, bin = bins,
                      In = Ins, Out = Outs, code = codes)
@@ -72,16 +74,16 @@ build_toys <- function() {
   bind_cols(dat1[, 5:7], dat2[, 5:7])
 
   src <- "a dummy dataset"
-  id <- list(sid = "toy1", coder = "mdg", version = "20180213")
+  id <- list(sid = "toy1", coder = "mdg", version = "20180306")
   type <- "cstamp"
 
   ds1 <- list(ds_src = "a dummy dataset",
-              ds_id = list(sid = "toy1", coder = "mdg", version = "20180213"),
+              ds_id = list(sid = "toy1", coder = "mdg", version = "20180308"),
               ds_type = "cstamp",
               data = dat1)
 
   ds2 <- list(ds_src = "a dummy dataset",
-              ds_id = list(sid = "toy2", coder = "slg", version = "20180215"),
+              ds_id = list(sid = "toy2", coder = "slg", version = "20180308"),
               ds_type = "cstamp",
               data = dat2)
 
