@@ -8,6 +8,9 @@ config <- read_json("./data-raw/config.json", simplifyVector = TRUE)
 # Build the params list
 pars <- list(
   ds_types = config$ds_types,
+  code_types = config$code_types,
+  rounds = config$rounds,
+  gids = config$gids,
   workshop_start = as.POSIXct(config$workshop_start, tz = "UTC")
 )
 

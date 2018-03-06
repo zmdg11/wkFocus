@@ -1,5 +1,8 @@
 {
   "ds_types": ["raw", "cstamp", "tsample", "agrAB", "stack"],
+  "code_types": ["facilitation", "focus"],
+  "rounds": ["1", "2"],
+  "gids": ["A", "B", "C"],
   "workshop_start" : ["2016-08-16 00:00:00 UTC"],
   "focus_cols": ["#8c510a", "#d8b365", "#FF7F00", "#CD1076", "#5ab4ac", "#01665e"],
   "facil_cols": ["#f1a340", "olivedrab3"],
