@@ -61,10 +61,6 @@ make_cstamp_datasets <- function(ds_raw) {
   ## Returns a fully specified codestamp dataset ($type = "cstamp") from a
   #  raw dataset.
 
-  # NB: CAPITALIZATION. Raw data file capitalizes the column names. These are
-  # changed to lowercase in all variable names, EXCEPT for "In" and "Out", to
-  # avoid conflict with R `in` operator.
-
   dat <- ds_raw$data
   sid <- ds_raw$ds_id$sid
 
@@ -73,10 +69,13 @@ make_cstamp_datasets <- function(ds_raw) {
   # Code from here is specific to research phase data. These session comprises
   # phase (= "res"), round, & group -------------------------
 
-  round <- wkFocus::wkf_parse_sid(sid)$round
-  gid   <- wkFocus::wkf_parse_sid(sid)$gid
+  this_round <- wkFocus::wkf_parse_sid(sid)$round
+  this_gid   <- wkFocus::wkf_parse_sid(sid)$gid
+  this_ses <- filter(study$sessions,
+               round == this_round & gid == this_gid)
 
-  # In/Out marks must be hours:mins:secs:frames for timecode conversion rountine
+  # In/Out marks are entered in excel as text of form "mm:ss".
+  # must be hours:mins:secs:frames for timecode conversion rountine
   # to work. This is to be compatable with .edl formats exported from video
   # editing software.
   dat <- dat %>%
@@ -89,18 +88,20 @@ make_cstamp_datasets <- function(ds_raw) {
   # origin for plotting with ggplot2
   dat <- dat %>%
     mutate(
-      In  = wkFocus::wkf_convert_tcode(dat$In, pars$fr, pars$t_workshop)$datetime,
-      Out = wkFocus::wkf_convert_tcode(dat$Out, pars$fr, pars$t_workshop)$datetime
+      In  = wkFocus::wkf_convert_tcode(dat$In, this_ses$frame_rate,
+                                       this_ses$start_time)$datetime,
+      Out = wkFocus::wkf_convert_tcode(dat$Out, this_ses$frame_rate,
+                                       this_ses$start_time)$datetime
     )
 
   # Need standard factors across the project
   dat <- dat %>%
     mutate(
-      round = factor(round, levels = pars$round_levels, ordered = TRUE),
-      gid   = factor(gid, levels = pars$gid_levels, ordered = TRUE),
+      round = factor(this_round, levels = pars$rounds, ordered = TRUE),
+      gid   = factor(this_gid, levels = pars$gids, ordered = TRUE),
       type  = factor(type, levels = pars$code_types, ordered = TRUE),
-      bin   = factor(bin, levels = pars$facil_codes, ordered = TRUE),
-      code  = factor(code, levels = pars$focus_codes, ordered = TRUE)
+      bin   = factor(bin, levels = study$facilitation$code, ordered = TRUE),
+      code  = factor(code, levels = study$focus$code, ordered = TRUE)
     )
 
   # Put in order by 'scope'
