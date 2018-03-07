@@ -68,9 +68,9 @@ wkf_tsample_one <- function(ds_cstamp, dt = 1, bt = NULL, et = NULL,
   ## Set up blank time sample data frame
   tsample_df <- dplyr::data_frame(
     t      = .POSIXct(double(), tz = "UTC"),  # create a null time var
-    bin    = factor(levels = getOption("wkf.facil.codes"), ordered = TRUE),
-    focus1 = factor(levels = getOption("wkf.focus.codes"), ordered = TRUE),
-    focus2 = factor(levels = getOption("wkf.focus.codes"), ordered = TRUE))
+    bin    = factor(levels = study$facilitation$code, ordered = TRUE),
+    focus1 = factor(levels = study$focus$code, ordered = TRUE),
+    focus2 = factor(levels = study$focus$code, ordered = TRUE))
 
   t <- bt
   i <- 1
