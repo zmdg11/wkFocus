@@ -46,21 +46,17 @@ library(knitr)
 library(kableExtra)
 library(wkFocus)
 
-# Chunk options
+# Rmd chunk options
 opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)  
 opts_chunk$set(comment = NA)  # do not prepend chunk results with a marker
 opts_chunk$set(fig.path = "images/")  # dump a copy of the figures here
 opts_chunk$set(fig.width = 10)
 
 # Ploting options
-options("wkf.pltime.max" = paste("2016-08-16", "00:15:00 UTC"))
-options("wkf.facil.cols"= c("#f1a340", "olivedrab3"))
+plopt <- list("wkf.pl.duration" = as.difftime("00:15:00", format = "%T"))
+oplopt <- options(plopt)
 
-## Get global parameters
-
-pars <- wkFocus::wkf_config()
-
-## Set local vignette parameters
+## Set local vignette parameter
 
 ds_list_name <- "res1A_focus"
 
@@ -137,8 +133,8 @@ ds_list %>%
 pl <- ds_stack$data %>% 
   ggplot(aes(x = In, y = Out, col = code)) +
   geom_point() +
-  scale_y_datetime(limits = lubridate::ymd_hms(c(pars$t_min, pars$t_max))) +
-  scale_color_manual(values = pars$code_col) +
+  # scale_y_datetime(limits = lubridate::ymd_hms(c(pars$t_min, pars$t_max))) +
+  scale_color_manual(values = getOption("wkf.focus.cols")) +
   geom_abline(slope = 1, intercept = 0, col = "grey") +
   labs(list(
     title = 
@@ -288,7 +284,3 @@ pl + facet_wrap( ~ coder + version, ncol = 1) + theme_bw()
 
 
 ```
-
-
-
-
