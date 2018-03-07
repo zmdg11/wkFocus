@@ -16,6 +16,7 @@ vignette: >
 ## Packages -------------------------
 
 # Formating output
+library(tidyverse)
 library(knitr)
 library(kableExtra)
 library(pander)
@@ -40,13 +41,13 @@ To set up the tasks, I offered three physical phenomena for exploration: a stuff
 
 ```{r session-table}
 
-wkFocus::session_tbl %>% 
-  dplyr::left_join(wkFocus::group_tbl, by = "gid") %>% 
-  dplyr::mutate(sid = paste0("res", round, gid), mins = duration/60) %>% 
-  dplyr::select(sid, round, group = gid, phenomenon, mins) %>% 
+study$session %>% 
+  mutate(duration = duration/60) %>% 
+  select(phase, round, gid, phenomenon, duration) %>% 
   knitr::kable(digits = 0,
-    col.names = c("Session ID", "Round", "Group ID", "Phenomenon", "Length (min)"),
+    col.names = c("Phase", "Round", "Group ID", "Phenomenon", "Length (min)"),
     caption = "Summary of the six research-phase sessions")
+
 ```
 
 
@@ -68,9 +69,10 @@ The focus code set was finalized, after repeated coding passes, on the six codes
 
 # A printable copy of the coding scheme should be available in project storage
 
-pander::pander(wkFocus::focus_code_description, 
-               justify = c("left", "left", "left"), 
-               split.tables = 100, split.cells = c(2, 13, 70))
+study$focus %>% 
+  select(code, name, description) %>% 
+  pander(justify = c("left", "left", "left"), 
+         split.tables = 100, split.cells = c(2, 13, 70))
 
 ```
 
@@ -82,9 +84,10 @@ With facilitation, I am interested in whether the science adept has become part 
 
 # A printable copy of the coding scheme should be available in project storage
 
-pander::pander(wkFocus::facil_code_description, 
-               justify = c("left", "left", "left"), 
-               split.tables = 100, split.cells = c(2, 13, 70))
+study$facilitation %>% 
+  select(code, name, description) %>% 
+  pander(justify = c("left", "left", "left"), 
+         split.tables = 100, split.cells = c(2, 13, 70))
 
 ```
 

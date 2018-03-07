@@ -43,10 +43,6 @@ library(tidyverse)  # map, mutate, filter, gather, select, group_by, summarize
 library(knitr)
 library(wkFocus)
 
-## Get global parameters
-
-pars <- wkf_config()
-
 ## Set local vignette parameters
 
 ds_list_name <- "res1A_focus"
