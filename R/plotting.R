@@ -16,22 +16,21 @@ wkf_pl_blank <- function(pl_labs = NULL) {
 
   ## Parameters -------------
 
-  # std x-range for session graphs
-  t_rng <- lubridate::ymd_hms(c(getOption("wkf.pltime.min"),
-                                getOption("wkf.pltime.max")))
-
+  # used global x-range for session graphs
+  pl_range <- c(getOption("wkf.ses.start"),
+                getOption("wkf.ses.start") + getOption("wkf.pl.duration"))
   ## Build plot
 
   # Map x to the standard time range
   pl <- ggplot2::ggplot() +
     ggplot2::scale_x_datetime(
       name = "Time from beginning of session (min)",
-      limits = t_rng,
+      limits = pl_range,
       date_breaks = "1 min", date_labels = "%M") +
     # Do not drop absent factor levels
     ggplot2::scale_y_discrete(
       drop = FALSE,
-      labels = getOption("wkf.focus.codes")) +
+      labels = study$focus$code) +
     ggplot2::labs(pl_labs)
 
   return(pl)
