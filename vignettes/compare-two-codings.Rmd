@@ -1,38 +1,21 @@
 ---
-title: "Compare 'res2C' codings"
+pagetitle: "Comparing two codings of work focus"
 subtitle: "Seeing the world differently"
 author: "Michael Garrett"
 date: "`r Sys.Date()`"
+params:
+   dataset: res1B
+   codingA: 2
+   codingB: 3
+   timestep: 60
 output: 
-  rmarkdown::html_vignette
+  rmarkdown::html_document:
+    css: ../css/simple_report.css
 vignette: >
-  %\VignetteIndexEntry{"Compare-within-res2C"}
+  %\VignetteIndexEntry{"Compare-two-codings"}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
-<style type="text/css">
-
-body{ /* Normal  */
-      font-size: 12px;
-  }
-td {  /* Table  */
-  font-size: 12px;
-}
-h1.title {
-  font-size: 32px;
-}
-h1 { /* Header 1 */
-  font-size: 24px;
-}
-h2 { /* Header 2 */
-    font-size: 18px;
-}
-h3 { /* Header 3 */
-  font-size: 14px;
-}
-
-</style>
 
 ```{r setup, include=FALSE}
 
@@ -43,15 +26,13 @@ library(tidyverse)  # map, mutate, filter, gather, select, group_by, summarize
 library(knitr)
 library(wkFocus)
 
-## Get global parameters
-
-pars <- wkf_config()
-
 ## Set local vignette parameters
 
-ds_list_name <- "res2C_focus"
+ds_list_name <- paste0(params$dataset, "_focus")
 
 ```
+
+# "Compare '`r ds_list_name`' codings"
 
 ## Get data
 
@@ -90,15 +71,15 @@ rm(tmp)
 
 ## Compare two codings
 
-<P style="page-break-before: always">
-
-```{r comp_1_3}
+```{r comp_1_2}
 
 ## pick datasets to sample
 
-to_comp     <- c(A = 1, B = 2)
-time_step   <- 1  # sec
+to_comp     <- c(A = params$codingA, B = params$codingB)
+time_step   <- params$timestep  # sec
 ```
+
+<P style="page-break-before: always">
 
 ### Sessions: `r sessions[to_comp]`; Coders: `r coders[to_comp]`; Versions: `r versions[to_comp]`.
 
@@ -118,7 +99,6 @@ agrAB$data %>% group_by(d) %>% summarize(n = n()) %>%
 
 ```
 
-Plot
 
 ```{r plot}
 
@@ -127,7 +107,7 @@ cap   <- paste0("Vertical bands show disagreements between coding datasets: ",
 title <- paste0("Plot of coding disagreements for phase ", ds_list_name)
 
 wkf_pl_comps(agrAB, to_plot = "D",
-          ds_stack = wkf_stack_cstamps(ds_list[to_comp]),
+          ds_stack = wkf_stack_cstamps(ds_list),
           pl_labs = list(caption = cap, title = title)) + 
   theme_bw() +
   facet_wrap(~coder, ncol = 1)
