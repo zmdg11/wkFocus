@@ -1,38 +1,18 @@
 ---
-title: "Dataset 'res2C_focus'. Initial exploration"
+pagetitle: "Explore work focus dataset"
 subtitle: "Seeing the world differently"
 author: "Michael Garrett"
 date: "`r Sys.Date()`"
+params:
+   dataset: res1B
 output: 
-  rmarkdown::html_document
+  rmarkdown::html_document:
+    css: ../css/simple_report.css
 vignette: >
-  %\VignetteIndexEntry{"Explore-res2C"}
+  %\VignetteIndexEntry{"Explore-dataset"}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
-
-<style type="text/css">
-
-body{ /* Normal  */
-      font-size: 12px;
-  }
-td {  /* Table  */
-  font-size: 12px;
-}
-h1.title {
-  font-size: 32px;
-}
-h1 { /* Header 1 */
-  font-size: 24px;
-}
-h2 { /* Header 2 */
-    font-size: 18px;
-}
-h3 { /* Header 3 */
-  font-size: 14px;
-}
-
-</style>
 
 ```{r setup, message = FALSE, warning = FALSE, echo = FALSE}
 
@@ -46,22 +26,23 @@ library(knitr)
 library(kableExtra)
 library(wkFocus)
 
-# Chunk options
+# Rmd chunk options
 opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)  
 opts_chunk$set(comment = NA)  # do not prepend chunk results with a marker
 opts_chunk$set(fig.path = "images/")  # dump a copy of the figures here
 opts_chunk$set(fig.width = 10)
 
-## Get global parameters
+# Ploting options
+plopt <- list("wkf.pl.duration" = as.difftime("00:15:00", format = "%T"))
+oplopt <- options(plopt)
 
-pars <- wkFocus::wkf_config()
+## Set local vignette parameter
 
-## Set local vignette parameters
-
-ds_list_name <- "res2C_focus"
+ds_list_name <- paste0(params$dataset, "_focus")
 
 ```
 
+# Dataset '`r ds_list_name`'. Initial exploration
 
 ```{r load_dat}
 
@@ -70,7 +51,7 @@ ds_list_name <- "res2C_focus"
 load(file.path("..", "data", paste0(ds_list_name, ".rda")))
 
 # Flip parameter to a "Global" symbol to be used as a handle on the dataset
-#  throughout vignette. Eg, if ds_list_name is "res2C_focus", `ds_list` will
+#  throughout vignette. Eg, if ds_list_name is "res1A_focus", `ds_list` will
 #  point to a copy of the loaded dataset with that name.
 
 ds_list <-  eval(as.symbol(ds_list_name))
@@ -103,7 +84,9 @@ ds_specs %>%
 
 ```
 
-#### Quick look for missing data
+## Examine data
+
+### Quick look for missing data
 
 ```{r data_nas}
 
@@ -126,28 +109,7 @@ ds_list %>%
 
 <P style="page-break-before: always">
 
-### Data records in dataset
-
-```{r codes_as_dots}
-
-pl <- ds_stack$data %>% 
-  ggplot(aes(x = In, y = Out, col = code)) +
-  geom_point() +
-  scale_y_datetime(limits = lubridate::ymd_hms(c(pars$t_min, pars$t_max))) +
-  scale_color_manual(values = pars$code_col) +
-  geom_abline(slope = 1, intercept = 0, col = "grey") +
-  labs(list(
-    title = 
-      "Out times vs. In times for codestamps", 
-    subtitle = paste("Dataset", ds_list_name),
-    caption = str_wrap("Each code for all codesets are displayed as a single dot. Vertical distance shows the Out time. Horizontal distance shows the In times. No codestamp should appear below the diagonal line.", 80)
-  ))
-
-pl + facet_wrap(~ coder + version) + theme_bw()
-  
-```
-
-#### Complete listing of codestamps in dataset
+### Complete listing of codestamps in dataset
 
 ```{r sample_dat, results="asis"}
 
@@ -200,6 +162,27 @@ ds_list %>%
 ```
 
 <P style="page-break-before: always">
+
+### Duration scatter plot: Out vs In
+
+```{r codes_as_dots}
+
+pl <- ds_stack$data %>% 
+  ggplot(aes(x = In, y = Out, col = code)) +
+  geom_point() +
+  # scale_y_datetime(limits = lubridate::ymd_hms(c(pars$t_min, pars$t_max))) +
+  scale_color_manual(values = getOption("wkf.focus.cols")) +
+  geom_abline(slope = 1, intercept = 0, col = "grey") +
+  labs(list(
+    title = 
+      "Out times vs. In times for codestamps", 
+    subtitle = paste("Dataset", ds_list_name),
+    caption = str_wrap("Each code for all codesets are displayed as a single dot. Vertical distance shows the Out time. Horizontal distance shows the In times. No codestamp should appear below the diagonal line.", 80)
+  ))
+
+pl + facet_wrap(~ coder + version) + theme_bw()
+  
+```
 
 ### Summary statistics for code duration
 
@@ -282,9 +265,4 @@ pl <- wkf_pl_cstamps(ds_stack, pl_labs =
 
 pl + facet_wrap( ~ coder + version, ncol = 1) + theme_bw()
 
-
 ```
-
-
-
-
