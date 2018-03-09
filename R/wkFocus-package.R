@@ -1,4 +1,4 @@
-#' wkFocus: A package for analyzing the work focus for the "research phase" of my dissertation study.
+#' Analyze the work focus for the "research phase" of my dissertation study.
 #'
 #' The wkFocus package comprises three parts: the focus-code datasets, the functions for working with these databases, and several vignettes exploring the databases.
 #'
