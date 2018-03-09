@@ -12,6 +12,8 @@
 #' @param warn Logical. If true (default), warnings will be issued when an NA code
 #'
 #' @return A list of time-sample dataset ($type = "tsample").
+#'
+#' @importFrom magrittr "%>%"
 #' @export
 #'
 #' @examples

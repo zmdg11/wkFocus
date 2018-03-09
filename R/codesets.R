@@ -7,6 +7,8 @@
 #' @return A codestack dataset ($ds_type = "stack").
 #' @export
 #'
+#' @importFrom magrittr "%>%"
+#'
 #' @examples
 #' # See vignettes on exploring datasets for examples.
 wkf_stack_cstamps <- function(ds_list) {

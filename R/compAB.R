@@ -149,6 +149,8 @@ compAB_at_time <- function(AB) {
 #' @param et POSIXct object given the time to end sampling. If NULL, sampling will end at the time of the earliest ending.
 #'
 #' @return An agreement dataset ($ds_type = "agrAB")
+#'
+#' @importFrom magrittr "%>%"
 #' @export
 #'
 #' @examples
