@@ -10,7 +10,6 @@ LazyData: true
 RoxygenNote: 6.0.1
 Imports: lubridate,
     readxl,
-    stringr,
     tidyverse
 Suggests: knitr,
     rmarkdown,
